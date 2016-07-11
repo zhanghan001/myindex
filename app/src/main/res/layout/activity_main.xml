@@ -1,17 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#EAEAEA"
+    android:orientation="vertical"
     tools:context="com.example.modao.moguindext.MainActivity">
 
-    <TextView
-        android:text="Hello World!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/picture_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="240dip"
+            android:background="#ff2338">
+
+        </android.support.v4.view.ViewPager>
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:rowCount="3">
+
+            <RelativeLayout
+                android:layout_width="180dip"
+                android:layout_height="60dip"
+                android:background="#ffffff">
+
+                <TextView
+                    android:id="@+id/indexHot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="2dp"
+                    android:text="hot↑"
+                    android:textColor="@color/colorIndexHot"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_live_circle_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_toRightOf="@+id/indexHot"
+                    android:src="@drawable/avator" />
+
+                <TextView
+                    android:id="@+id/index_text_live"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_toRightOf="@+id/index_live_circle_img"
+                    android:text="蘑菇街直播・Live"
+                    android:textColor="@color/colorIndexHot"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/index_text_live"
+
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@+id/index_live_circle_img"
+                    android:text="万人齐看网红直播"
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="180dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="0.5dp"
+
+                android:background="#ffffff">
+
+                <TextView
+                    android:id="@+id/index_hot_people_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="9dp"
+                    android:text="红人榜"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/index_hot_people_desc_text"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/index_hot_people_text"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="5dp"
+                    android:text="现在正在独占榜..."
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_hot_people_circle_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="5dp"
+
+                    android:layout_toRightOf="@+id/index_hot_people_desc_text"
+                    android:src="@drawable/avator" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="180dip"
+                android:layout_height="60dip"
+                android:layout_marginTop="1dip"
+                android:background="#ffffff">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_fashion_circle_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/avator" />
+
+                <TextView
+                    android:id="@+id/index_hot_fashion_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_toRightOf="@id/index_fashion_circle_img"
+                    android:text="时尚搭配"
+                    android:textColor="@color/colorIndexFashion"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/index_hot_fashion_desc_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toRightOf="@id/index_fashion_circle_img"
+                    android:text="夏日出街穿搭示范"
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="180dip"
+                android:layout_height="60dip"
+                android:layout_marginLeft="0.5dp"
+
+                android:layout_marginTop="1dp"
+                android:background="#ffffff">
+
+                <TextView
+                    android:id="@+id/index_asume_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="9dp"
+                    android:text="MOGU娱乐"
+                    android:textColor="@color/colorIndexEtertament"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/index_amuse_desc"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/index_asume_text"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="5dp"
+                    android:text="现在正在独占榜..."
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_amuse_avator"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/index_amuse_desc"
+                    android:src="@drawable/avator" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="180dp"
+                android:layout_height="60dip"
+                android:layout_marginTop="1dip"
+                android:background="#ffffff">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_makeup_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/avator" />
+
+                <TextView
+                    android:id="@+id/index_makeup_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_toRightOf="@id/index_makeup_img"
+                    android:text="时尚搭配"
+                    android:textColor="@color/colorIndexFashion"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/index_hot_makeup_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_toRightOf="@id/index_makeup_img"
+                    android:text="夏日出街穿搭示范"
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="180dip"
+                android:layout_height="60dip"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="0.5dp"
+                android:background="#ffffff">
+
+                <TextView
+                    android:id="@+id/index_find_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="9dp"
+                    android:text="MOGU娱乐"
+                    android:textColor="@color/colorIndexEtertament"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/index_find_desc"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/index_find_text"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="5dp"
+                    android:text="现在正在独占榜..."
+                    android:textColor="@color/colorb"
+                    android:textSize="11sp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/index_find_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/index_find_desc"
+                    android:src="@drawable/avator" />
+
+            </RelativeLayout>
+
+
+        </GridLayout>
+
+    </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>

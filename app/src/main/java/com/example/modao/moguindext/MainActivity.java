@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     RelativeLayout relaoyt_find = null;
     String msg = null;
     LinearLayout line_search = null;
-    List<RelativeLayout> rela_list = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         relaoyt_enter.setOnClickListener(MainActivity.this);
         relaoyt_makeup.setOnClickListener(MainActivity.this);
         relaoyt_find.setOnClickListener(MainActivity.this);
-        rela_list = new ArrayList<>();
+
         line_search = (LinearLayout) findViewById(R.id.search_linearlayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mRecyclerview.setHasFixedSize(true);
         madapter = new twitRecycleAdapter(s);
         mRecyclerview.setAdapter(madapter);
-        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+//        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -271,17 +270,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             timer = new Timer();
             timer.schedule(task, 0, 2000);
         }
-        rela_list.clear();
-        RelativeLayout rel1 = new RelativeLayout(this);
-        RelativeLayout rel2 = new RelativeLayout(this);
-        RelativeLayout rel3 = new RelativeLayout(this);
-        LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 200);
-        rel1.setLayoutParams(layoutParams);
-        rel2.setLayoutParams(layoutParams);
-        rel3.setLayoutParams(layoutParams);
-        rela_list.add(rel1);
-        rela_list.add(rel2);
-        rela_list.add(rel3);
+
     }
 
 
@@ -423,8 +412,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onDestroy() {
         list.clear();
-        rela_list.clear();
-        rela_list=null;
+
 //        rects = null;
         list = null;
         pointList.clear();

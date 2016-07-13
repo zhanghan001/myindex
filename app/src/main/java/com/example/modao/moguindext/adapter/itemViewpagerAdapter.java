@@ -26,8 +26,9 @@ public class itemViewpagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view==object;
+        return view == object;
     }
+
     @Override
     public int getItemPosition(Object object) {
         // TODO Auto-generated method stub
@@ -35,21 +36,18 @@ public class itemViewpagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(View arg0, int arg1, Object arg2) {
-        // TODO Auto-generated method stub
-
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView(list.get(position));
     }
 
-//    @Override
-//    public Object instantiateItem(View arg0, int arg1) {
-//        // TODO Auto-generated method stub
-//        // ((ViewPager) arg0).addView(list.get(arg1));
-//        // return list.get(arg1);
-//        arg1 %= list.size();
-//        if (arg1 < 0) {
-//            arg1 = list.size() + arg1;
-//        }
-//
-//        return new View(get);
-//    }
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        position %= list.size();
+        if (position < 0) {
+            position = list.size() + position;
+        }
+        container.addView( list.get(position));
+        return list.get(position);
+    }
+
 }

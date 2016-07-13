@@ -24,18 +24,12 @@ import java.util.List;
 /**
  * Created by jamase on 2016-04-09.
  */
-public class mUserInfoRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public String[] str;
-
-
     public ArrayList contentID = new ArrayList<>();
-
-
-    public mUserInfoRecycleAdapter(String[] datas) {
+    public twitRecycleAdapter(String[] datas) {
         str = datas;
     }
-
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -46,14 +40,7 @@ public class mUserInfoRecycleAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-
         final MyViewHolder1 mholder = (MyViewHolder1) holder;
-
-
-
-
-
-
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,16 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.StringLoader;
-import com.example.modao.moguindext.adapter.mUserInfoRecycleAdapter;
+import com.example.modao.moguindext.adapter.twitRecycleAdapter;
 import com.example.modao.moguindext.wedgit.DividerItemDecoration;
 import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.util.Style;
 
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -45,13 +40,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     RecyclerView.LayoutManager mLayoutManager;
     String[] s = new String[]{"dwda", "dwhnudh", "dwhnudh",
             "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh"};
-    public mUserInfoRecycleAdapter madapter;
+    public twitRecycleAdapter madapter;
     MySwipeRefreshLayout swipeRefreshLayout;
     AppBarLayout appBarLayout;
     ViewPager viewPager;
     private List<ImageView> list = new ArrayList<ImageView>();
     private List<ImageView> pointList = new ArrayList<ImageView>();
-
     int num = 0;
     private GuidePageAdapter adapter = null;
     private ViewGroup viewGroup = null;
@@ -70,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     RelativeLayout relaoyt_find = null;
     String msg = null;
     LinearLayout line_search = null;
+    List<RelativeLayout> rela_list = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,23 +102,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         relaoyt_enter.setOnClickListener(MainActivity.this);
         relaoyt_makeup.setOnClickListener(MainActivity.this);
         relaoyt_find.setOnClickListener(MainActivity.this);
-
-        line_search= (LinearLayout) findViewById(R.id.search_linearlayout);
+        rela_list = new ArrayList<>();
+        line_search = (LinearLayout) findViewById(R.id.search_linearlayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                   if (line_search.getTop()<50){
-                       View supview=findViewById(R.id.sup_view);
-                       supview.setVisibility(View.VISIBLE);
-                   }
+                    if (line_search.getTop() < 50) {
+                        View supview = findViewById(R.id.sup_view);
+                        supview.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLayoutManager);
         mRecyclerview.setHasFixedSize(true);
-        madapter = new mUserInfoRecycleAdapter(s);
+        madapter = new twitRecycleAdapter(s);
         mRecyclerview.setAdapter(madapter);
         mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -193,13 +188,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void initdata() {
         list.clear();
-//        if (list.size() < 7) {
         ImageView imageView0 = new ImageView(MainActivity.this);
         Glide.with(this).load("http://i12.tietuku.cn/b6db401cce66841e.jpg").centerCrop().into(imageView0);
         ImageView imageView1 = new ImageView(this);
         Glide.with(MainActivity.this).load("http://i12.tietuku.cn/74d28c89f2857852.jpg").centerCrop().
                 into(imageView1);
-
         ImageView imageView2 = new ImageView(this);
         Glide.with(MainActivity.this).load("http://i2.buimg.com/029168290e434623.jpg").centerCrop().
                 into(imageView2);
@@ -216,8 +209,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ImageView imageView6 = new ImageView(this);
         Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
                 centerCrop().into(imageView6);
-
-
         list.add(imageView0);
         list.add(imageView1);
         list.add(imageView2);
@@ -229,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         adapter = new GuidePageAdapter();
         viewPager.setAdapter(adapter);
         pointList.clear();
-
         for (int i = 0; i < list.size(); i++) {
             LinearLayout.LayoutParams margin = new LinearLayout.LayoutParams(
                     21,
@@ -281,7 +271,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             timer = new Timer();
             timer.schedule(task, 0, 2000);
         }
-
+        rela_list.clear();
+        RelativeLayout rel1 = new RelativeLayout(this);
+        RelativeLayout rel2 = new RelativeLayout(this);
+        RelativeLayout rel3 = new RelativeLayout(this);
+        LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 200);
+        rel1.setLayoutParams(layoutParams);
+        rel2.setLayoutParams(layoutParams);
+        rel3.setLayoutParams(layoutParams);
+        rela_list.add(rel1);
+        rela_list.add(rel2);
+        rela_list.add(rel3);
     }
 
 
@@ -423,6 +423,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onDestroy() {
         list.clear();
+        rela_list.clear();
+        rela_list=null;
 //        rects = null;
         list = null;
         pointList.clear();

@@ -7,4 +7,9 @@
     <color name="colorb">#8A8A8A</color>
     <color name="colorIndexFashion">#7AC5CD</color>
     <color name="colorIndexEtertament">#EE8262</color>
+    <color name="color_gray">#8F8F8F</color>
+    <color name="color_low_gray">#C4C4C4</color>
+
+    <color name="color_but">#474747</color>
+
 </resources>

@@ -69,8 +69,8 @@ public class mUserInfoRecycleAdapter extends RecyclerView.Adapter<RecyclerView.V
         public MyViewHolder1(View itemView) {
             super(itemView);
             view = itemView;
-            text = (TextView) itemView.findViewById(R.id.userinfo_text);
-            text_title = (TextView) itemView.findViewById(R.id.userinfo_text_title);
+            text = (TextView) itemView.findViewById(R.id.username_text);
+            text_title = (TextView) itemView.findViewById(R.id.user_time_text);
 //            text.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {

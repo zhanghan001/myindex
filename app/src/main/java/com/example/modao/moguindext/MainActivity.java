@@ -1,5 +1,8 @@
 package com.example.modao.moguindext;
 
+
+import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
@@ -15,10 +18,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.StringLoader;
 import com.example.modao.moguindext.adapter.mUserInfoRecycleAdapter;
 import com.example.modao.moguindext.wedgit.DividerItemDecoration;
 import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
@@ -27,13 +32,15 @@ import com.github.johnpersano.supertoasts.util.Style;
 
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
     RecyclerView mRecyclerview;
     RecyclerView.LayoutManager mLayoutManager;
     String[] s = new String[]{"dwda", "dwhnudh", "dwhnudh",
@@ -44,19 +51,25 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     ViewPager viewPager;
     private List<ImageView> list = new ArrayList<ImageView>();
     private List<ImageView> pointList = new ArrayList<ImageView>();
+
     int num = 0;
     private GuidePageAdapter adapter = null;
     private ViewGroup viewGroup = null;
     public Handler myHandler = null;
-    private  Timer timer=null;
-
-
-
-
-
-
-
-
+    private Timer timer = null;
+    Button but_focus = null;
+    Button but_sug = null;
+    Button but_500like = null;
+    Button but_200like = null;
+    Button but_100like = null;
+    RelativeLayout relaoyt_live = null;
+    RelativeLayout relaoyt_rank = null;
+    RelativeLayout relaoyt_fashion = null;
+    RelativeLayout relaoyt_enter = null;
+    RelativeLayout relaoyt_makeup = null;
+    RelativeLayout relaoyt_find = null;
+    String msg = null;
+    LinearLayout line_search = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +86,40 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        but_focus = (Button) findViewById(R.id.focus);
+        but_500like = (Button) findViewById(R.id.like_fivhun);
+        but_200like = (Button) findViewById(R.id.like_twohun);
+        but_sug = (Button) findViewById(R.id.sug);
+        but_100like = (Button) findViewById(R.id.like_onehun);
+        but_sug.setOnClickListener(MainActivity.this);
+        but_500like.setOnClickListener(MainActivity.this);
+        but_200like.setOnClickListener(MainActivity.this);
+        but_100like.setOnClickListener(MainActivity.this);
+        relaoyt_live = (RelativeLayout) findViewById(R.id.rel_live);
+        relaoyt_rank = (RelativeLayout) findViewById(R.id.rel_rank);
+        relaoyt_fashion = (RelativeLayout) findViewById(R.id.rel_fashion);
+        relaoyt_enter = (RelativeLayout) findViewById(R.id.rel_enter);
+        relaoyt_makeup = (RelativeLayout) findViewById(R.id.rel_makeup);
+        relaoyt_find = (RelativeLayout) findViewById(R.id.rel_find);
+        relaoyt_live.setOnClickListener(MainActivity.this);
+        relaoyt_rank.setOnClickListener(MainActivity.this);
+        relaoyt_fashion.setOnClickListener(MainActivity.this);
+        relaoyt_enter.setOnClickListener(MainActivity.this);
+        relaoyt_makeup.setOnClickListener(MainActivity.this);
+        relaoyt_find.setOnClickListener(MainActivity.this);
+
+        line_search= (LinearLayout) findViewById(R.id.search_linearlayout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                   if (line_search.getTop()<50){
+                       View supview=findViewById(R.id.sup_view);
+                       supview.setVisibility(View.VISIBLE);
+                   }
+                }
+            });
+        }
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLayoutManager);
         mRecyclerview.setHasFixedSize(true);
@@ -147,39 +194,37 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void initdata() {
         list.clear();
 //        if (list.size() < 7) {
-            ImageView imageView0 = new ImageView(MainActivity.this);
-//            imageView0.setLayoutParams(fi);
-            Glide.with(this).load("http://i12.tietuku.cn/b6db401cce66841e.jpg").centerCrop().into(imageView0);
-            ImageView imageView1 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/74d28c89f2857852.jpg").centerCrop().
-                    into(imageView1);
+        ImageView imageView0 = new ImageView(MainActivity.this);
+        Glide.with(this).load("http://i12.tietuku.cn/b6db401cce66841e.jpg").centerCrop().into(imageView0);
+        ImageView imageView1 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/74d28c89f2857852.jpg").centerCrop().
+                into(imageView1);
 
-            ImageView imageView2 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/029168290e434623.jpg").centerCrop().
-                    into(imageView2);
+        ImageView imageView2 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i2.buimg.com/029168290e434623.jpg").centerCrop().
+                into(imageView2);
 
-            ImageView imageView3 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                    centerCrop().into(imageView3);
-            ImageView imageView4 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                    centerCrop().into(imageView4);
-            ImageView imageView5 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                    centerCrop().into(imageView5);
-            ImageView imageView6 = new ImageView(this);
-            Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                    centerCrop().into(imageView6);
+        ImageView imageView3 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+                centerCrop().into(imageView3);
+        ImageView imageView4 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+                centerCrop().into(imageView4);
+        ImageView imageView5 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+                centerCrop().into(imageView5);
+        ImageView imageView6 = new ImageView(this);
+        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+                centerCrop().into(imageView6);
 
 
-            list.add(imageView0);
-            list.add(imageView1);
-            list.add(imageView2);
-            list.add(imageView3);
-            list.add(imageView4);
-            list.add(imageView5);
-            list.add(imageView6);
-//        }
+        list.add(imageView0);
+        list.add(imageView1);
+        list.add(imageView2);
+        list.add(imageView3);
+        list.add(imageView4);
+        list.add(imageView5);
+        list.add(imageView6);
         viewPager.setOnPageChangeListener(MainActivity.this);
         adapter = new GuidePageAdapter();
         viewPager.setAdapter(adapter);
@@ -199,17 +244,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     10, 10, 10);
 
             ImageView yuanimgview = new ImageView(MainActivity.this);
-            // ����ÿ��СԲ��Ŀ��
+
             yuanimgview.setLayoutParams(margin);
 
             // yuanimageViews = new ImageView[list.size()];
 
             pointList.add(yuanimgview);
             if (i == 0) {
-                // Ĭ��ѡ�е�һ��ͼƬ
+
                 pointList.get(i).setBackgroundResource(R.drawable.abu);
             } else {
-                // ����ͼƬ������δѡ��״̬
                 pointList.get(i).setBackgroundResource(R.drawable.point);
                 pointList.get(i).setAlpha(1F);
             }
@@ -221,23 +265,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             myHandler = new Handler() {
 
                 public void handleMessage(Message msg) {
-                    if (viewPager != null) {
-
-                        if (num == 6) {
-                            viewPager.setCurrentItem(num);
+                    if (viewPager != null && list != null) {
+                        viewPager.setCurrentItem(num);
+                        if (num == list.size() - 1) {
                             num = 0;
                         } else {
-
-                            viewPager.setCurrentItem(num);
                             num++;
                         }
-
                     }
-
                 }
-
-                ;
-
             };
         }
         mytask task = new mytask();
@@ -257,19 +293,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int arg0) {
         // TODO Auto-generated method stub
-if(list!=null){
-    num = arg0;
-    for (int i = 0; i < list.size(); i++) {
+        if (list != null) {
+            num = arg0;
+            for (int i = 0; i < list.size(); i++) {
+                pointList.get(i).setBackgroundResource(R.drawable.abu);
 
-        pointList.get(i).setBackgroundResource(R.drawable.abu);
-        pointList.get(i).setAlpha(1F);
+                if (arg0 % list.size() != i) {
+                    pointList.get(i).setBackgroundResource(R.drawable.point);
 
-        if (arg0 % list.size() != i) {
-            pointList.get(i).setBackgroundResource(R.drawable.point);
-            pointList.get(i).setAlpha(1F);
+                }
+            }
         }
-    }
-}
 
 
         // // yuanimgview.setBackgroundResource(R.drawable.yuan_white);
@@ -283,13 +317,55 @@ if(list!=null){
     public void onPageScrollStateChanged(int state) {
 
     }
+
+    @Override
+    public void onClick(View view) {
+        msg = null;
+        switch (view.getId()) {
+            case R.id.rel_live:
+                msg = "这是直播界面";
+                openactivity();
+                break;
+            case R.id.rel_rank:
+                msg = "这是红人榜界面";
+                openactivity();
+                break;
+            case R.id.rel_fashion:
+                msg = "这是时尚搭配界面";
+                openactivity();
+                break;
+            case R.id.rel_enter:
+                msg = "这是MUGU娱乐界面";
+                openactivity();
+                break;
+            case R.id.rel_makeup:
+
+                msg = "这是妆容界面";
+                openactivity();
+                break;
+            case R.id.rel_find:
+                msg = "这是发现好物界面";
+                openactivity();
+                break;
+        }
+
+
+    }
+
+    public void openactivity() {
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, actIndicator.class);
+        intent.putExtra("msg", msg);
+        startActivity(intent);
+    }
+
     class mytask extends TimerTask {
 
         @Override
         public void run() {
             // TODO Auto-generated method stub
             if (myHandler != null) {
-                myHandler.sendEmptyMessageDelayed(0, 2000);
+                myHandler.sendEmptyMessageDelayed(0, 0);
             }
 
         }
@@ -300,7 +376,7 @@ if(list!=null){
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return 10000;
         }
 
         @Override
@@ -317,7 +393,7 @@ if(list!=null){
         @Override
         public void destroyItem(View arg0, int arg1, Object arg2) {
             // TODO Auto-generated method stub
-            viewPager.removeView(arg0);
+
         }
 
         @Override

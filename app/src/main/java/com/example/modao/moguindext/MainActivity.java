@@ -69,13 +69,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initview();
-        initdata();
+        initView();
+        initData();
 
     }
 
 
-    private void initview() {
+    private void initView() {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 //        });
     }
 
-    private void initdata() {
+    private void initData() {
         list.clear();
         ImageView imageView0 = new ImageView(MainActivity.this);
         Glide.with(this).load("http://i12.tietuku.cn/b6db401cce66841e.jpg").centerCrop().into(imageView0);

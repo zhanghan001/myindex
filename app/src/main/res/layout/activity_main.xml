@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll"
 
             >
 
@@ -150,7 +150,7 @@
                         android:textSize="11sp" />
 
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.example.modao.moguindext.wedgit.Mogujie_circle_imageview
                         android:id="@+id/index_hot_people_circle_img"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
@@ -169,7 +169,7 @@
                     android:layout_marginTop="1dip"
                     android:background="#ffffff">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.example.modao.moguindext.wedgit.Mogujie_circle_imageview
                         android:id="@+id/index_fashion_circle_img"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
@@ -335,16 +335,16 @@
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="28dp"
+            android:minHeight="100dp"
             android:layout_marginBottom="9dp"
-
             android:layout_marginTop="9dp"
             android:scrollbars="none"
-            app:layout_collapseMode="pin">
+            app:layout_scrollFlags="enterAlways|exitUntilCollapsed">
 
             <LinearLayout
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
 
                 <Button
                     android:id="@+id/focus"
@@ -415,11 +415,12 @@
     <!--android:clipToPadding="true"-->
     <!--android:fitsSystemWindows="true"-->
     <!--android:orientation="vertical">-->
-<View
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@color/white"
-    android:alpha="0"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:alpha="0"
+        android:background="@color/white" />
+
     <LinearLayout
         android:id="@+id/search_linearlayout"
         android:layout_width="350dp"

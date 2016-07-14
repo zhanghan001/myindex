@@ -1,11 +1,13 @@
 package com.example.modao.moguindext;
 
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -64,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     RelativeLayout relaoyt_find = null;
     String msg = null;
     LinearLayout line_search = null;
+    View mIndexSearchBackgroundView;
+    Button mIndexFocusBut;
+    CoordinatorLayout mCoordnatorLayout;
+    HorizontalScrollView mHorizontalScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initView() {
+        mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.index_scrollview);
+        mCoordnatorLayout = (CoordinatorLayout) findViewById(R.id.index_coodernator);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
@@ -101,7 +110,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         relaoyt_enter.setOnClickListener(MainActivity.this);
         relaoyt_makeup.setOnClickListener(MainActivity.this);
         relaoyt_find.setOnClickListener(MainActivity.this);
-
+        mIndexSearchBackgroundView = findViewById(R.id.index_search_bacground_view);
+        mIndexFocusBut = (Button) findViewById(R.id.focus);
+        mIndexFocusBut.setOnClickListener(this);
         line_search = (LinearLayout) findViewById(R.id.search_linearlayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -136,9 +147,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         });
 
-
         viewGroup = (LinearLayout)
                 findViewById(R.id.description_layout);
+        mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                mHorizontalScrollView.getTop()
+                return false;
+            }
+        });
+        mCoordnatorLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+
+            }
+        });
 
 //        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.index_swiprefreshlayout);
 //        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
@@ -335,6 +358,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             case R.id.rel_find:
                 msg = "这是发现好物界面";
                 openactivity();
+                break;
+            case R.id.focus:
+                mIndexFocusBut.setText("123");
+                ObjectAnimator.ofFloat(mIndexSearchBackgroundView, "Alpha", 0.0F, 1.0F).setDuration(500)
+                        .start();
                 break;
         }
 

@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/index_coodernator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#EAEAEA"
@@ -32,13 +33,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="38.5dp"
+                android:minHeight="44dp"
                 android:orientation="vertical"
-                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="210dip"
+                    android:layout_height="180dp"
                     android:orientation="vertical">
 
                     <android.support.v4.view.ViewPager
@@ -329,21 +330,23 @@
                 android:visibility="gone"></View>
 
             <HorizontalScrollView
+                android:id="@+id/index_scrollview"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_marginBottom="9dp"
-                android:layout_marginTop="9dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="9dp"
                 android:minHeight="100dp"
                 android:scrollbars="none"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
                 >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    >
+                    android:gravity="center_vertical">
 
                     <Button
                         android:id="@+id/focus"
@@ -415,10 +418,11 @@
         <!--android:fitsSystemWindows="true"-->
         <!--android:orientation="vertical">-->
         <View
+            android:id="@+id/index_search_bacground_view"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="45dp"
             android:alpha="0"
-            android:background="@color/white" />
+            android:background="@color/color_lower_gray" />
 
         <LinearLayout
             android:id="@+id/search_linearlayout"

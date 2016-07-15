@@ -3,6 +3,7 @@ package com.example.modao.moguindext;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     Button mIndexFocusBut;
     CoordinatorLayout mCoordnatorLayout;
     HorizontalScrollView mHorizontalScrollView;
+    AppBarLayout mAppbarLayout;
+    Button mButtonSug;
+    LinearLayout mFillterLinearLayout;
+    View mSupView;
+    Button mButtonAddPeople;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +89,18 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initView() {
+        mButtonAddPeople = (Button) findViewById(R.id.add_people);
+        mSupView = findViewById(R.id.sup_view);
+        mFillterLinearLayout = (LinearLayout) findViewById(R.id.fillter_linearlayout);
+        mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        mButtonSug = (Button) findViewById(R.id.sug);
         mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.index_scrollview);
         mCoordnatorLayout = (CoordinatorLayout) findViewById(R.id.index_coodernator);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+
         but_focus = (Button) findViewById(R.id.focus);
         but_500like = (Button) findViewById(R.id.like_fivhun);
         but_200like = (Button) findViewById(R.id.like_twohun);
@@ -113,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mIndexSearchBackgroundView = findViewById(R.id.index_search_bacground_view);
         mIndexFocusBut = (Button) findViewById(R.id.focus);
         mIndexFocusBut.setOnClickListener(this);
+        mButtonSug.setOnClickListener(this);
         line_search = (LinearLayout) findViewById(R.id.search_linearlayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -128,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLayoutManager);
         mRecyclerview.setHasFixedSize(true);
-        madapter = new twitRecycleAdapter(s);
+        madapter = new twitRecycleAdapter(this,s);
         mRecyclerview.setAdapter(madapter);
 //        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -152,17 +165,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                mHorizontalScrollView.getTop()
+
+
                 return false;
             }
         });
-        mCoordnatorLayout.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                final int[] position = new int[2];
+                mHorizontalScrollView.getLocationOnScreen(position);
+                float alppa = (float) (1604 - position[1]) / 1310;
+                mIndexSearchBackgroundView.setAlpha(alppa);
+                if (alppa >= 0.6) {
+                    mButtonAddPeople.setBackgroundResource(R.drawable.bjc);
+                } else {
+                    mButtonAddPeople.setBackgroundResource(R.drawable.bjd);
+                }
+                mSupView.setAlpha(alppa);
             }
         });
-
 //        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.index_swiprefreshlayout);
 //        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
 //                android.R.color.holo_red_light, android.R.color.holo_orange_light,
@@ -291,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mytask task = new mytask();
         if (timer == null) {
             timer = new Timer();
-            timer.schedule(task, 0, 2000);
+            timer.schedule(task, 0, 10000);
         }
 
     }
@@ -360,9 +382,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 openactivity();
                 break;
             case R.id.focus:
-                mIndexFocusBut.setText("123");
+                mIndexFocusBut.setText("focus");
                 ObjectAnimator.ofFloat(mIndexSearchBackgroundView, "Alpha", 0.0F, 1.0F).setDuration(500)
                         .start();
+                break;
+            case R.id.sug:
+
+                mIndexFocusBut.setText("sug");
                 break;
         }
 

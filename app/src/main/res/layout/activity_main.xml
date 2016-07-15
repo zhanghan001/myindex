@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:minHeight="44dp"
                 android:orientation="vertical"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -323,85 +326,89 @@
 
             </LinearLayout>
 
-            <View
-                android:id="@+id/sup_view"
+            <FrameLayout
+                android:id="@+id/index_frame"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:visibility="gone"></View>
-
-            <HorizontalScrollView
-                android:id="@+id/index_scrollview"
-                android:layout_width="wrap_content"
-                android:layout_height="28dp"
-                android:layout_marginBottom="9dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="9dp"
-                android:minHeight="100dp"
-                android:scrollbars="none"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
+                android:layout_height="44dp"
                 >
 
-                <LinearLayout
+                <View
+                    android:id="@+id/sup_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical">
+                    android:alpha="0"
+                    android:background="@color/white"></View>
 
-                    <Button
-                        android:id="@+id/focus"
-                        android:layout_width="75dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="@drawable/shape_activety_filter"
-                        android:text="关注"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
+                <HorizontalScrollView
+                    android:id="@+id/index_scrollview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp"
+                  >
 
-                    <Button
-                        android:id="@+id/sug"
-                        android:layout_width="90dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="@drawable/index_fliter_shape"
-                        android:text="小编推荐"
-                        android:textColor="@color/color_but"
-                        android:textSize="15sp" />
+                    <LinearLayout
+                        android:id="@+id/fillter_linearlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical">
 
-                    <Button
-                        android:id="@+id/like_fivhun"
-                        android:layout_width="75dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="@drawable/index_fliter_shape"
-                        android:text="500赞"
-                        android:textColor="@color/color_but"
-                        android:textSize="15sp" />
+                        <Button
+                            android:id="@+id/focus"
+                            android:layout_width="75dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="7dp"
+                            android:background="@drawable/shape_activety_filter"
+                            android:text="关注"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
 
-                    <Button
-                        android:id="@+id/like_twohun"
-                        android:layout_width="75dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="@drawable/index_fliter_shape"
-                        android:text="200赞"
-                        android:textColor="@color/color_but"
-                        android:textSize="15sp" />
+                        <Button
+                            android:id="@+id/sug"
+                            android:layout_width="90dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="7dp"
+                            android:background="@drawable/index_fliter_shape"
+                            android:text="小编推荐"
+                            android:textColor="@color/color_but"
+                            android:textSize="15sp" />
 
-                    <Button
-                        android:id="@+id/like_onehun"
-                        android:layout_width="75dp"
-                        android:layout_height="28dp"
-                        android:layout_marginLeft="7dp"
-                        android:background="@drawable/index_fliter_shape"
-                        android:text="100赞"
-                        android:textColor="@color/color_but"
-                        android:textSize="15sp" />
+                        <Button
+                            android:id="@+id/like_fivhun"
+                            android:layout_width="75dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="7dp"
+                            android:background="@drawable/index_fliter_shape"
+                            android:text="500赞"
+                            android:textColor="@color/color_but"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/like_twohun"
+                            android:layout_width="75dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="7dp"
+                            android:background="@drawable/index_fliter_shape"
+                            android:text="200赞"
+                            android:textColor="@color/color_but"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:id="@+id/like_onehun"
+                            android:layout_width="75dp"
+                            android:layout_height="28dp"
+                            android:layout_marginLeft="7dp"
+                            android:background="@drawable/index_fliter_shape"
+                            android:text="100赞"
+                            android:textColor="@color/color_but"
+                            android:textSize="15sp" />
 
 
-                </LinearLayout>
+                    </LinearLayout>
 
-            </HorizontalScrollView>
+                </HorizontalScrollView>
+            </FrameLayout>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -437,11 +444,11 @@
                 android:layout_width="280dip"
                 android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/button_search"
+                <View
+                    android:id="@+id/view_search"
                     android:layout_width="280dip"
                     android:layout_height="match_parent"
-                    android:alpha="0.9"
+                    android:alpha="0.8"
                     android:background="@drawable/search_background" />
 
                 <Button
@@ -466,19 +473,18 @@
                     android:layout_height="19dip"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="250dip"
-                    android:background="@drawable/ake" />
+                    android:background="@drawable/abm" />
 
 
             </FrameLayout>
 
             <Button
-                android:id="@+id/Button_message"
-                android:layout_width="23dip"
-                android:layout_height="23dip"
+                android:id="@+id/add_people"
+                android:layout_width="22dip"
+                android:layout_height="22dip"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="15dip"
-                android:alpha="0.9"
-                android:background="@drawable/bjc"
+                android:background="@drawable/bjd"
                 android:gravity="center_vertical" />
         </LinearLayout>
         <!--</LinearLayout>-->

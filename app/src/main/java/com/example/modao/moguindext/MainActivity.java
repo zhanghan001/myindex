@@ -8,7 +8,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
+
+import com.example.modao.moguindext.wedgit.mogujieCoordinateLayout;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +18,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
@@ -32,6 +37,8 @@ import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,13 +77,18 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     LinearLayout line_search = null;
     View mIndexSearchBackgroundView;
     Button mIndexFocusBut;
-    CoordinatorLayout mCoordnatorLayout;
+    mogujieCoordinateLayout mCoordnatorLayout;
     HorizontalScrollView mHorizontalScrollView;
     AppBarLayout mAppbarLayout;
     Button mButtonSug;
     LinearLayout mFillterLinearLayout;
     View mSupView;
     Button mButtonAddPeople;
+    GridLayout mGridLayout;
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +101,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initView() {
+        mGridLayout = (GridLayout) findViewById(R.id.gridlayout);
         mButtonAddPeople = (Button) findViewById(R.id.add_people);
         mSupView = findViewById(R.id.sup_view);
         mFillterLinearLayout = (LinearLayout) findViewById(R.id.fillter_linearlayout);
         mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mButtonSug = (Button) findViewById(R.id.sug);
         mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.index_scrollview);
-        mCoordnatorLayout = (CoordinatorLayout) findViewById(R.id.index_coodernator);
+        mCoordnatorLayout = (mogujieCoordinateLayout) findViewById(R.id.index_coodernator);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
@@ -141,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(mLayoutManager);
         mRecyclerview.setHasFixedSize(true);
-        madapter = new twitRecycleAdapter(this,s);
+        madapter = new twitRecycleAdapter(this, s);
         mRecyclerview.setAdapter(madapter);
 //        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         viewPager.setOnTouchListener(new View.OnTouchListener() {
@@ -165,11 +178,34 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                final int[] height = new int[2];
+                mCoordnatorLayout.getLocationOnScreen(height);
 
+                int rawY = 0;
+                if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
+                    Log.e("dawd-------------", "down");
+                }
+                VelocityTracker velocityTracker = VelocityTracker.obtain();
+                velocityTracker.addMovement(motionEvent);
+                velocityTracker.computeCurrentVelocity(10);
+                int yVelocity = (int) velocityTracker.getYVelocity();
+                mIndexFocusBut.setText(yVelocity + "");
+                if (yVelocity > 0) {
+                    mCoordnatorLayout.scrollBy(0, -yVelocity);
+                }
 
+                if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+                    final int[] position = new int[2];
+                    mCoordnatorLayout.getLocationOnScreen(position);
+//                    mCoordnatorLayout.scrollTo(0,position[1] - height[1] );
+//                    ObjectAnimator.ofFloat(mCoordnatorLayout, "translationY", -motionEvent.getRawY()).setDuration(1000).start();
+                    mCoordnatorLayout.smoothscrollby(0, 0);
+                }
                 return false;
             }
         });
+
+
         mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -182,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 } else {
                     mButtonAddPeople.setBackgroundResource(R.drawable.bjd);
                 }
+                mIndexFocusBut.setText("q");
                 mSupView.setAlpha(alppa);
             }
         });
@@ -313,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mytask task = new mytask();
         if (timer == null) {
             timer = new Timer();
-            timer.schedule(task, 0, 10000);
+            timer.schedule(task, 0, 2000);
         }
 
     }
@@ -474,4 +511,31 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         timer.cancel();
         super.onDestroy();
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //继承了Activity的onTouchEvent方法，直接监听点击事件
+        mIndexFocusBut.setText("event");
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            x1 = event.getX();
+            y1 = event.getY();
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            //当手指离开的时候
+            x2 = event.getX();
+            y2 = event.getY();
+            if (y1 - y2 > 50) {
+                Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
+            } else if (y2 - y1 > 50) {
+                Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
+            } else if (x1 - x2 > 50) {
+                Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
+            } else if (x2 - x1 > 50) {
+                Toast.makeText(MainActivity.this, "向右滑", Toast.LENGTH_SHORT).show();
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
 }

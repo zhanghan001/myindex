@@ -24,6 +24,8 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     RelativeLayout relaoyt_makeup = null;
     RelativeLayout relaoyt_find = null;
     String msg = null;
-    LinearLayout line_search = null;
+    LinearLayout mLinearLayoutSearch = null;
     View mIndexSearchBackgroundView;
     Button mIndexFocusBut;
     mogujieCoordinateLayout mCoordnatorLayout;
@@ -139,12 +141,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mIndexFocusBut = (Button) findViewById(R.id.focus);
         mIndexFocusBut.setOnClickListener(this);
         mButtonSug.setOnClickListener(this);
-        line_search = (LinearLayout) findViewById(R.id.search_linearlayout);
+        mLinearLayoutSearch = (LinearLayout) findViewById(R.id.search_linearlayout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            line_search.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            mLinearLayoutSearch.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                    if (line_search.getTop() < 50) {
+                    if (mLinearLayoutSearch.getTop() < 50) {
                         View supview = findViewById(R.id.sup_view);
                         supview.setVisibility(View.VISIBLE);
                     }
@@ -178,12 +180,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                final int[] height = new int[2];
-                mCoordnatorLayout.getLocationOnScreen(height);
 
-                int rawY = 0;
+                mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
                     Log.e("dawd-------------", "down");
+//
+
                 }
                 VelocityTracker velocityTracker = VelocityTracker.obtain();
                 velocityTracker.addMovement(motionEvent);
@@ -195,13 +198,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
 
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
-                    final int[] position = new int[2];
-                    mCoordnatorLayout.getLocationOnScreen(position);
 //                    mCoordnatorLayout.scrollTo(0,position[1] - height[1] );
 //                    ObjectAnimator.ofFloat(mCoordnatorLayout, "translationY", -motionEvent.getRawY()).setDuration(1000).start();
                     mCoordnatorLayout.smoothscrollby(0, 0);
+                    mLinearLayoutSearch.setVisibility(View.VISIBLE);
+                    ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
+
                 }
-                return false;
+
+                return true;
             }
         });
 
@@ -218,8 +223,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 } else {
                     mButtonAddPeople.setBackgroundResource(R.drawable.bjd);
                 }
-                mIndexFocusBut.setText("q");
-                mSupView.setAlpha(alppa);
+//                mSupView.setAlpha(alppa);
+//                int malpha=position[1]-1604;
+//                mLinearLayoutSearch.setAlpha(malpha/10);
             }
         });
 //        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.index_swiprefreshlayout);

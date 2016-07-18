@@ -3,13 +3,13 @@ package com.example.modao.moguindext;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 
-import com.example.modao.moguindext.wedgit.mogujieCoordinateLayout;
+import com.example.modao.moguindext.wedgit.MogujieLinearLayout;
+import com.example.modao.moguindext.wedgit.MogujieCoordinateLayout;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -24,8 +24,6 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
@@ -33,14 +31,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.modao.moguindext.adapter.twitRecycleAdapter;
-import com.example.modao.moguindext.wedgit.DividerItemDecoration;
 import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
 
-import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     LinearLayout mLinearLayoutSearch = null;
     View mIndexSearchBackgroundView;
     Button mIndexFocusBut;
-    mogujieCoordinateLayout mCoordnatorLayout;
+    MogujieCoordinateLayout mCoordnatorLayout;
     HorizontalScrollView mHorizontalScrollView;
     AppBarLayout mAppbarLayout;
     Button mButtonSug;
@@ -91,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     float x2 = 0;
     float y1 = 0;
     float y2 = 0;
+    float y = 0;
+    MogujieLinearLayout mLinearLayoutParent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initView() {
+        mLinearLayoutParent = (MogujieLinearLayout) findViewById(R.id.linearlayout_parent);
         mGridLayout = (GridLayout) findViewById(R.id.gridlayout);
         mButtonAddPeople = (Button) findViewById(R.id.add_people);
         mSupView = findViewById(R.id.sup_view);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mButtonSug = (Button) findViewById(R.id.sug);
         mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.index_scrollview);
-        mCoordnatorLayout = (mogujieCoordinateLayout) findViewById(R.id.index_coodernator);
+        mCoordnatorLayout = (MogujieCoordinateLayout) findViewById(R.id.index_coodernator);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerview.requestDisallowInterceptTouchEvent(false);
@@ -181,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                mLinearLayoutSearch.setVisibility(View.INVISIBLE);
 
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
                     Log.e("dawd-------------", "down");
@@ -192,25 +188,43 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 velocityTracker.addMovement(motionEvent);
                 velocityTracker.computeCurrentVelocity(10);
                 int yVelocity = (int) velocityTracker.getYVelocity();
-                mIndexFocusBut.setText(yVelocity + "");
+
                 if (yVelocity > 0) {
-                    mCoordnatorLayout.scrollBy(0, -yVelocity);
+                    if (yVelocity > 80) {
+                        yVelocity = 80;
+                    }
+                    mLinearLayoutParent.scrollBy(0, -yVelocity);
+//                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                 }
 
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
-//                    mCoordnatorLayout.scrollTo(0,position[1] - height[1] );
-//                    ObjectAnimator.ofFloat(mCoordnatorLayout, "translationY", -motionEvent.getRawY()).setDuration(1000).start();
-                    mCoordnatorLayout.smoothscrollby(0, 0);
+                    mLinearLayoutParent.smoothscrollby(0, 0);
                     mLinearLayoutSearch.setVisibility(View.VISIBLE);
                     ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
 
                 }
+                if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
+                    if ((motionEvent.getRawY() - y) > 0) {
+                        mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                    }
+                    y = motionEvent.getRawY();
 
-                return true;
+                }
+
+                return false;
             }
         });
+        mAppbarLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
+                    Log.e("dawd-------------", "appbar-down");
+//
 
-
+                }
+                return false;
+            }
+        });
         mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -223,7 +237,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 } else {
                     mButtonAddPeople.setBackgroundResource(R.drawable.bjd);
                 }
-//                mSupView.setAlpha(alppa);
+                mSupView.setAlpha(alppa);
+                if (position[1] > 1592) {
+//                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                } else {
+//                    mLinearLayoutSearch.setVisibility(View.VISIBLE);
+                }
 //                int malpha=position[1]-1604;
 //                mLinearLayoutSearch.setAlpha(malpha/10);
             }
@@ -518,30 +537,30 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onDestroy();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        //继承了Activity的onTouchEvent方法，直接监听点击事件
-        mIndexFocusBut.setText("event");
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //当手指按下的时候
-            x1 = event.getX();
-            y1 = event.getY();
-        }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            //当手指离开的时候
-            x2 = event.getX();
-            y2 = event.getY();
-            if (y1 - y2 > 50) {
-                Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
-            } else if (y2 - y1 > 50) {
-                Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
-            } else if (x1 - x2 > 50) {
-                Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
-            } else if (x2 - x1 > 50) {
-                Toast.makeText(MainActivity.this, "向右滑", Toast.LENGTH_SHORT).show();
-            }
-        }
-        return super.onTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        //继承了Activity的onTouchEvent方法，直接监听点击事件
+//        mIndexFocusBut.setText("event");
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            //当手指按下的时候
+//            x1 = event.getX();
+//            y1 = event.getY();
+//        }
+//        if (event.getAction() == MotionEvent.ACTION_UP) {
+//            //当手指离开的时候
+//            x2 = event.getX();
+//            y2 = event.getY();
+//            if (y1 - y2 > 50) {
+//                Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
+//            } else if (y2 - y1 > 50) {
+//                Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
+//            } else if (x1 - x2 > 50) {
+//                Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
+//            } else if (x2 - x1 > 50) {
+//                Toast.makeText(MainActivity.this, "向右滑", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
 }

@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.modao.moguindext.wedgit.MogujieLinearLayout
-    android:id="@+id/linearlayout_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.modao.moguindext.wedgit.MogujieLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearlayout_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="-32dp"
     android:orientation="vertical"
-    android:layout_marginTop="-10dp"
-
     tools:context="com.example.modao.moguindext.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent">
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="qdqw" />
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="170dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bpl" />
     </RelativeLayout>
 
-    <com.example.modao.moguindext.wedgit.MogujieCoordinateLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/index_coodernator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,17 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp">
-            <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/colorIndexFashion"-->
-            <!--android:minHeight="?attr/actionBarSize"-->
-            <!--app:layout_scrollFlags="scroll|enterAlways"-->
-            <!--app:navigationIcon="?attr/homeAsUpIndicator"-->
-            <!--app:theme="@style/Theme.AppCompat.NoActionBar">-->
 
-            <!--</android.support.v7.widget.Toolbar>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -518,5 +509,5 @@
         <!--</android.support.v4.widget.NestedScrollView>-->
 
 
-    </com.example.modao.moguindext.wedgit.MogujieCoordinateLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </com.example.modao.moguindext.wedgit.MogujieLinearLayout>

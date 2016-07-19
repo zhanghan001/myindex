@@ -14,6 +14,7 @@ import com.example.modao.moguindext.wedgit.MogujieLinearLayout;
 
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
@@ -183,8 +185,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                mIndexFocusBut.setText(mCoordnatorLayout.getScrollY() + "");
-
                 int[] position = new int[2];
                 int[] processPosition = new int[2];
                 mViewProcess.getLocationOnScreen(processPosition);
@@ -200,13 +200,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 velocityTracker.computeCurrentVelocity(10);
                 int yVelocity = (int) velocityTracker.getYVelocity();
 
-                if (yVelocity > 0 && (position[1] > 1500)) {
+                if (yVelocity > 0 && (processPosition[1] > -27)) {
                     if (yVelocity > 80) {
                         yVelocity = 80;
                     }
                     mLinearLayoutParent.scrollBy(0, -yVelocity);
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                } else if (yVelocity < 0 && (processPosition[1] <-27 )) {
+                    mAppbarLayout.setExpanded(true);
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
 //                    mLinearLayoutParent.smoothscrollby(0, 0);
@@ -223,10 +225,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     } else {
                         mLinearLayoutParent.smoothscrollby(0, -200);
                     }
+
                 }
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
                     if (processPosition[1] > -26) {
                         mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                        y = motionEvent.getRawY();
                     }
 
                 }
@@ -263,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 mViewProcess.getLocationOnScreen(processPosition);
                 mHorizontalScrollView.getLocationOnScreen(position);
                 VelocityTracker velocityTracker = VelocityTracker.obtain();
+                ViewConfiguration.get(getApplicationContext()).getScaledMinimumFlingVelocity();
                 velocityTracker.addMovement(motionEvent);
                 velocityTracker.computeCurrentVelocity(10);
                 int yVelocity = (int) velocityTracker.getYVelocity();
@@ -275,9 +280,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                 }
+                if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
+                    Log.e("------------------item", "down");
+
+                }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
 //                    mLinearLayoutParent.smoothscrollby(0, 0);
-
                     if (mLinearLayoutSearch.getVisibility() == View.INVISIBLE) {
                         mLinearLayoutSearch.setVisibility(View.VISIBLE);
                         ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
@@ -290,13 +298,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     } else {
                         mLinearLayoutParent.smoothscrollby(0, -200);
                     }
+                    if (yVelocity > 0) {
+                        LinearLayoutManager lm = (LinearLayoutManager) mRecyclerview.getLayoutManager();
+                        if (lm.findViewByPosition(lm.findFirstVisibleItemPosition()).getTop() == 0
+                                && lm.findFirstVisibleItemPosition() == 0) {
+
+                            appBarLayout.setExpanded(true);
+                        }
+                    }
+                    if (motionEvent.getRawY() > y) {
+//                        appBarLayout.setExpanded(true);
+                    }
                 }
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
-                    if (processPosition[1] > -26&&processPosition[1]<300) {
+                    if (processPosition[1] > -27 && processPosition[1] < 300) {
                         mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                     }
 
                 }
+
+
                 return false;
             }
         });
@@ -439,11 +460,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 mIndexFocusBut.setText("focus");
                 ObjectAnimator.ofFloat(mIndexSearchBackgroundView, "Alpha", 0.0F, 1.0F).setDuration(500)
                         .start();
+                mCoordnatorLayout.scrollTo(0, -90);
+//                mCoordnatorLayout.smo
+                y = 0;
                 break;
             case R.id.sug:
-                Rotate3dAnimation animation = new Rotate3dAnimation(0, 180, 0, 0, 0, true);
-                MainActivity.this.findViewById(R.id.reresh_process).startAnimation(animation);
-
+//                appBarLayout.scrollBy(0, -90);
+//                android.support.design.widget.CoordinatorLayout.Behavior behavior =
+//                        ((android.support.design.widget.CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams())
+//                                .getBehavior();
+//                behavior.onNestedPreScroll(mCoordnatorLayout, mAppbarLayout, mAppbarLayout, 0,-200, new int[]{0, 0});
+//                mRecyclerview.scrollBy(0, -90);
+                mAppbarLayout.setExpanded(false);
+//                mCoordnatorLayout.offsetTopAndBottom(40);
                 break;
         }
 

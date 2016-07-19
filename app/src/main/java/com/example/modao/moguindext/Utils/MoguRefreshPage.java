@@ -2,6 +2,7 @@ package com.example.modao.moguindext.Utils;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;

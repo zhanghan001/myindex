@@ -1,14 +1,10 @@
 package com.example.modao.moguindext.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.MailTo;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.modao.moguindext.MainActivity;
 import com.example.modao.moguindext.R;
-import com.example.modao.moguindext.wedgit.DividerItemDecoration;
+import com.example.modao.moguindext.Utils.MoguDip2px;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.util.Style;
 
 
 import java.util.ArrayList;
@@ -43,7 +40,6 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public View mView;
     PopupWindow mWindow;
     public Context context;
-
 
 
     public twitRecycleAdapter(Context context, String[] datas) {
@@ -78,16 +74,17 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public View mPopView;
         RelativeLayout mReal;
         LinearLayout mItemParentLinearLayout;
+
         public MyViewHolder1(View itemView) {
             super(itemView);
             mView = itemView;
             view = itemView;
-            mItemParentLinearLayout= (LinearLayout) mView.findViewById(R.id.item_parent_linearlayout);
+            mItemParentLinearLayout = (LinearLayout) mView.findViewById(R.id.item_parent_linearlayout);
             mItemParentLinearLayout.setBackgroundResource(R.drawable.item_radius_background);
             mItemParentLinearLayout.getLayoutParams();
             text = (TextView) itemView.findViewById(R.id.username_text);
             mPopView = itemView.findViewById(R.id.popwinbut);
-            mReal= (RelativeLayout) mView.findViewById(R.id.item_top_rel);
+            mReal = (RelativeLayout) mView.findViewById(R.id.item_top_rel);
             text_title = (TextView) itemView.findViewById(R.id.user_time_text);
             viewPager = (ViewPager) itemView.findViewById(R.id.item_viewpager);
             rela_list = new ArrayList<>();
@@ -104,13 +101,13 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rel2.addView(img2);
             rel3.addView(img3);
             CircleImageView point = new CircleImageView(itemView.getContext());
-            point.setBorderWidth(DipToPixels(itemView.getContext(), 1));
+            point.setBorderWidth(MoguDip2px.DipToPixels(itemView.getContext(), 1));
             point.setBorderColor(Color.WHITE);
             point.setImageResource(R.drawable.amq);
-            int marginlaft = DipToPixels(itemView.getContext(), 230);
-            int margintop = DipToPixels(itemView.getContext(), 230);
-            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(DipToPixels(itemView.getContext(), 11)
-                    , DipToPixels(itemView.getContext(), 11));
+            int marginlaft = MoguDip2px.DipToPixels(itemView.getContext(), 230);
+            int margintop = MoguDip2px.DipToPixels(itemView.getContext(), 230);
+            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MoguDip2px.DipToPixels(itemView.getContext(), 11)
+                    , MoguDip2px.DipToPixels(itemView.getContext(), 11));
 //            p.width =;
 //            p.height = 30;
             p.leftMargin = marginlaft;
@@ -138,7 +135,7 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                                 params.alpha = 0.7f;
                                                 ((MainActivity) context).getWindow().setAttributes(params);
 
-                                                                            }
+                                            }
 
 
                                         }
@@ -147,12 +144,6 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
-    public int DipToPixels(Context context, int dip) {
-        final float SCALE = context.getResources().getDisplayMetrics().density;
-        float valueDips = dip;
-        int valuePixels = (int) (valueDips * SCALE + 0.5f);
-        return valuePixels;
-    }
 
     public void initPopWindow() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -168,12 +159,20 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 // 这里检验popWindow里的button是否可以点击
         Button first = (Button) mPopView.findViewById(R.id.first);
+        Button cancle = (Button) mPopView.findViewById(R.id.second);
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mWindow.dismiss();
+            }
+        });
         first.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                System.out.println("第一个按钮被点击了");
+                SuperToast.create(context, "取消关注", SuperToast.Duration.MEDIUM,
+                        Style.getStyle(Style.RED, SuperToast.Animations.FLYIN)).show();
+                mWindow.dismiss();
             }
         });
         // 实例化一个ColorDrawable颜色为半透明

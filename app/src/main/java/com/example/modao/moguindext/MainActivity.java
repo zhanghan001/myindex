@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 
 import com.example.modao.moguindext.Utils.MoguRefreshPage;
+import com.example.modao.moguindext.Utils.Rotate3dAnimation;
 import com.example.modao.moguindext.wedgit.MogujieLinearLayout;
 
 import android.support.design.widget.CoordinatorLayout;
@@ -36,6 +37,7 @@ import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
 
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     GridLayout mGridLayout;
     float y = 0;
     MogujieLinearLayout mLinearLayoutParent;
+    float x1 = 0;
+    float x2 = 0;
+    float y1 = 0;
+    float y2 = 0;
+    View mViewProcess;
+    MoguRefreshPage mMoguRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     private void initView() {
+
+
+        mViewProcess = findViewById(R.id.reresh_process);
         mLinearLayoutParent = (MogujieLinearLayout) findViewById(R.id.linearlayout_parent);
         mGridLayout = (GridLayout) findViewById(R.id.gridlayout);
         mButtonAddPeople = (Button) findViewById(R.id.add_people);
@@ -107,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout = (CoordinatorLayout) findViewById(R.id.index_coodernator);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerview.requestDisallowInterceptTouchEvent(false);
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         but_focus = (Button) findViewById(R.id.focus);
         but_500like = (Button) findViewById(R.id.like_fivhun);
@@ -173,7 +183,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mCoordnatorLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                mIndexFocusBut.setText(mCoordnatorLayout.getScrollY() + "");
+
                 int[] position = new int[2];
+                int[] processPosition = new int[2];
+                mViewProcess.getLocationOnScreen(processPosition);
                 mHorizontalScrollView.getLocationOnScreen(position);
 
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
@@ -191,34 +205,32 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         yVelocity = 80;
                     }
                     mLinearLayoutParent.scrollBy(0, -yVelocity);
+//                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
-                    mLinearLayoutParent.smoothscrollby(0, 0);
-                    mLinearLayoutSearch.setVisibility(View.VISIBLE);
-                    ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
-//                    MoguRefreshPage mMoguRefresh=
+//                    mLinearLayoutParent.smoothscrollby(0, 0);
 
+                    if (mLinearLayoutSearch.getVisibility() == View.INVISIBLE) {
+                        mLinearLayoutSearch.setVisibility(View.VISIBLE);
+                        ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
+                    }
+                    if (mMoguRefresh == null) {
+                        mMoguRefresh = new MoguRefreshPage(MainActivity.this);
+                    }
+                    if (mMoguRefresh.isRefreshing() == false) {
+                        mMoguRefresh.Refresh(processPosition[1]);
+                    } else {
+                        mLinearLayoutParent.smoothscrollby(0, -200);
+                    }
                 }
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
-                    if ((motionEvent.getRawY() - y) > 0) {
+                    if (processPosition[1] > -26) {
                         mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                     }
-                    y = motionEvent.getRawY();
 
                 }
 
-                return false;
-            }
-        });
-        mAppbarLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
-                    Log.e("dawd-------------", "appbar-down");
-//
-
-                }
                 return false;
             }
         });
@@ -240,53 +252,54 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 } else {
 //                    mLinearLayoutSearch.setVisibility(View.VISIBLE);
                 }
-//                int malpha=position[1]-1604;
-//                mLinearLayoutSearch.setAlpha(malpha/10);
             }
         });
-//        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.index_swiprefreshlayout);
-//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-//                android.R.color.holo_red_light, android.R.color.holo_orange_light,
-//                android.R.color.holo_green_light);
+        mRecyclerview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.e("-----------------re", "touch");
+                int[] position = new int[2];
+                int[] processPosition = new int[2];
+                mViewProcess.getLocationOnScreen(processPosition);
+                mHorizontalScrollView.getLocationOnScreen(position);
+                VelocityTracker velocityTracker = VelocityTracker.obtain();
+                velocityTracker.addMovement(motionEvent);
+                velocityTracker.computeCurrentVelocity(10);
+                int yVelocity = (int) velocityTracker.getYVelocity();
+                mButtonSug.setText(yVelocity + "");
+                if (yVelocity > 0 && (position[1] > 1500)) {
+                    if (yVelocity > 80) {
+                        yVelocity = 80;
+                    }
+                    mLinearLayoutParent.scrollBy(0, -yVelocity);
+//                    mCoordnatorLayout.stopNestedScroll();
+//                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                }
+                if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
+//                    mLinearLayoutParent.smoothscrollby(0, 0);
 
-//        swipeRefreshLayout.setOnRefreshListener(new MySwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (MainActivity.this!= null) {
-//                            SuperToast.create(MainActivity.this, "加载完成", SuperToast.Duration.MEDIUM,
-//                                    Style.getStyle(Style.BLUE, SuperToast.Animations.FLYIN)).show();
-//                            swipeRefreshLayout.setRefreshing(false);
-//                        }
-//
-//
-//                    }
-//                }, 5000);
-//
-//
-//            }
-//        });
-//        swipeRefreshLayout.setBottomColor(android.R.color.holo_blue_light,
-//                android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light);
-//        swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
-//            @Override
-//            public void onLoad() {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (MainActivity.this != null) {
-//                            SuperToast.create(MainActivity.this, "加载完成", SuperToast.Duration.MEDIUM,
-//                                    Style.getStyle(Style.BLUE, SuperToast.Animations.FLYIN)).show();
-//                            swipeRefreshLayout.setLoading(false);
-//
-//                        }
-//                    }
-//                }, 5000);
-//
-//            }
-//        });
+                    if (mLinearLayoutSearch.getVisibility() == View.INVISIBLE) {
+                        mLinearLayoutSearch.setVisibility(View.VISIBLE);
+                        ObjectAnimator.ofFloat(mLinearLayoutSearch, "alpha", 0f, 1.0f).setDuration(300).start();
+                    }
+                    if (mMoguRefresh == null) {
+                        mMoguRefresh = new MoguRefreshPage(MainActivity.this);
+                    }
+                    if (mMoguRefresh.isRefreshing() == false) {
+                        mMoguRefresh.Refresh(processPosition[1]);
+                    } else {
+                        mLinearLayoutParent.smoothscrollby(0, -200);
+                    }
+                }
+                if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
+                    if (processPosition[1] > -26&&processPosition[1]<300) {
+                        mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+                return false;
+            }
+        });
     }
 
     private void initData() {
@@ -428,8 +441,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         .start();
                 break;
             case R.id.sug:
+                Rotate3dAnimation animation = new Rotate3dAnimation(0, 180, 0, 0, 0, true);
+                MainActivity.this.findViewById(R.id.reresh_process).startAnimation(animation);
 
-                mIndexFocusBut.setText("sug");
                 break;
         }
 
@@ -515,5 +529,30 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         timer.cancel();
         super.onDestroy();
     }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        //继承了Activity的onTouchEvent方法，直接监听点击事件
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            //当手指按下的时候
+//            x1 = event.getX();
+//            y1 = event.getY();
+//        }
+//        if (event.getAction() == MotionEvent.ACTION_UP) {
+//            //当手指离开的时候
+//            x2 = event.getX();
+//            y2 = event.getY();
+//            if (y1 - y2 > 50) {
+//                Toast.makeText(MainActivity.this, "向上滑", Toast.LENGTH_SHORT).show();
+//            } else if (y2 - y1 > 50) {
+//                Toast.makeText(MainActivity.this, "向下滑", Toast.LENGTH_SHORT).show();
+//            } else if (x1 - x2 > 50) {
+//                Toast.makeText(MainActivity.this, "向左滑", Toast.LENGTH_SHORT).show();
+//            } else if (x2 - x1 > 50) {
+//                Toast.makeText(MainActivity.this, "向右滑", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//        return true;
+//    }
 
 }

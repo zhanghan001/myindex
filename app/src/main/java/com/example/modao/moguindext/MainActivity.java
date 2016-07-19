@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.AppBarLayout;
 
 import com.example.modao.moguindext.Utils.MoguRefreshPage;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     float y2 = 0;
     View mViewProcess;
     MoguRefreshPage mMoguRefresh;
+    static boolean isdown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,14 +202,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 velocityTracker.computeCurrentVelocity(10);
                 int yVelocity = (int) velocityTracker.getYVelocity();
 
-                if (yVelocity > 0 && (processPosition[1] > -27)) {
+                if (yVelocity > 0 && (processPosition[1] > -27) && (position[1] > 1590)) {
                     if (yVelocity > 80) {
                         yVelocity = 80;
                     }
                     mLinearLayoutParent.scrollBy(0, -yVelocity);
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
-                } else if (yVelocity < 0 && (processPosition[1] <-27 )) {
+                } else if (!(yVelocity > 0) && (processPosition[1] > -25)) {
                     mAppbarLayout.setExpanded(true);
                 }
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     } else {
                         mLinearLayoutParent.smoothscrollby(0, -200);
                     }
-
+                    y = Integer.MAX_VALUE;
                 }
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
                     if (processPosition[1] > -26) {
@@ -306,13 +308,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             appBarLayout.setExpanded(true);
                         }
                     }
-                    if (motionEvent.getRawY() > y) {
-//                        appBarLayout.setExpanded(true);
+                    if (position[1] < 800 && position[1] > 200) {
+                        appBarLayout.setExpanded(true);
                     }
+
+//                    appBarLayout.setExpanded(isdown);
+//                    y = Integer.MAX_VALUE;
                 }
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
-                    if (processPosition[1] > -27 && processPosition[1] < 300) {
+                    if (position[1] > 1596) {
                         mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                        appBarLayout.setExpanded(true);
+//                        if (motionEvent.getRawY() > y) {
+//                            isdown = true;
+//                        }
                     }
 
                 }
@@ -457,10 +466,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 openactivity();
                 break;
             case R.id.focus:
-                mIndexFocusBut.setText("focus");
-                ObjectAnimator.ofFloat(mIndexSearchBackgroundView, "Alpha", 0.0F, 1.0F).setDuration(500)
-                        .start();
-                mCoordnatorLayout.scrollTo(0, -90);
 //                mCoordnatorLayout.smo
                 y = 0;
                 break;
@@ -471,7 +476,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 //                                .getBehavior();
 //                behavior.onNestedPreScroll(mCoordnatorLayout, mAppbarLayout, mAppbarLayout, 0,-200, new int[]{0, 0});
 //                mRecyclerview.scrollBy(0, -90);
-                mAppbarLayout.setExpanded(false);
 //                mCoordnatorLayout.offsetTopAndBottom(40);
                 break;
         }

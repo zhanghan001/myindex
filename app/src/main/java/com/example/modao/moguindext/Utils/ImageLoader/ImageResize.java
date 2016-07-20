@@ -25,7 +25,7 @@ public class ImageResize {
         return BitmapFactory.decodeResource(res, resid, options);
     }
 
-    public Bitmap decodeSampledBitmapFromResoure(FileDescriptor fd, int resid, int reqWidth, int reqHeight) {
+    public Bitmap decodeSampledBitmapFromFileDescriptor(FileDescriptor fd,  int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFileDescriptor(fd, null, options);

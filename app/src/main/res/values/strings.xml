@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">moguindext</string>
+    <item name="imageloader_uri" type="id" />
 </resources>

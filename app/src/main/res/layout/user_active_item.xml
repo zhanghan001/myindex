@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_parent_linearlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
@@ -12,7 +13,7 @@
         android:id="@+id/item_top_rel"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white">
+        android:background="@drawable/item_radius_background">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/user_avator"
@@ -57,12 +58,13 @@
             android:textColor="@color/color_gray"
             android:textSize="12sp" />
 
-        <Button
-            android:layout_width="20dp"
-            android:layout_height="10dp"
-            android:layout_marginLeft="305dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/aso" />
+        <View
+            android:id="@+id/popwinbut"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="300dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bj_" />
 
     </RelativeLayout>
 
@@ -74,8 +76,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@drawable/item_radius_background"
+        android:orientation="vertical"
+        >
 
         <TextView
             android:id="@+id/item_desc_text"
@@ -191,11 +194,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
                 android:layout_marginLeft="290dp"
+                android:layout_marginTop="26dp"
                 android:text="345"
-                android:textSize="13sp"
-                 />
+                android:textSize="13sp" />
         </RelativeLayout>
     </LinearLayout>
 

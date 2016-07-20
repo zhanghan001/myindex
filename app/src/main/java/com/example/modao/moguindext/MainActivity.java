@@ -275,12 +275,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 int yVelocity = (int) velocityTracker.getYVelocity();
                 mButtonSug.setText(yVelocity + "");
                 if (yVelocity > 0 && (position[1] > 1500)) {
-                    if (yVelocity > 80) {
-                        yVelocity = 80;
-                    }
-                    mLinearLayoutParent.scrollBy(0, -yVelocity);
+                    LinearLayoutManager lm = (LinearLayoutManager) mRecyclerview.getLayoutManager();
+                    if (lm.findViewByPosition(lm.findFirstVisibleItemPosition()).getTop() == 0
+                            && lm.findFirstVisibleItemPosition() == 0) {
+                        if (yVelocity > 80) {
+                            yVelocity = 80;
+                        }
+                        mLinearLayoutParent.scrollBy(0, -yVelocity);
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
+                    }
                 }
                 if (MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
                     Log.e("------------------item", "down");
@@ -308,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             appBarLayout.setExpanded(true);
                         }
                     }
-                    if (position[1] < 800 && position[1] > 200) {
+                    if (position[1] < 700 && position[1] > 450) {
                         appBarLayout.setExpanded(true);
                     }
 
@@ -318,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 if (MotionEvent.ACTION_MOVE == motionEvent.getAction()) {
                     if (position[1] > 1596) {
                         mLinearLayoutSearch.setVisibility(View.INVISIBLE);
-                        appBarLayout.setExpanded(true);
+//                        appBarLayout.setExpanded(true);
 //                        if (motionEvent.getRawY() > y) {
 //                            isdown = true;
 //                        }

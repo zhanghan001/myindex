@@ -11,7 +11,6 @@ import java.io.BufferedOutputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -40,9 +39,9 @@ import com.example.modao.moguindext.R;
 /**
  * Created by modao on 16/7/20.
  */
-public class ImageLoader {
+public class ImageJsonLoader {
 
-    private static final String TAG = "ImageLoader";
+    private static final String TAG = "ImageJsonLoader";
 
     public static final int MESSAGE_POST_RESULT = 1;
 
@@ -62,7 +61,7 @@ public class ImageLoader {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
         public Thread newThread(Runnable r) {
-            return new Thread(r, "ImageLoader#" + mCount.getAndIncrement());
+            return new Thread(r, "ImageJsonLoader#" + mCount.getAndIncrement());
         }
     };
 
@@ -93,7 +92,7 @@ public class ImageLoader {
     private LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache;
 
-    private ImageLoader(Context context) {
+    private ImageJsonLoader(Context context) {
         mContext = context.getApplicationContext();
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         int cacheSize = maxMemory / 8;
@@ -119,13 +118,13 @@ public class ImageLoader {
     }
 
     /**
-     * build a new instance of ImageLoader
+     * build a new instance of ImageJsonLoader
      *
      * @param context
-     * @return a new instance of ImageLoader
+     * @return a new instance of ImageJsonLoader
      */
-    public static ImageLoader build(Context context) {
-        return new ImageLoader(context);
+    public static ImageJsonLoader build(Context context) {
+        return new ImageJsonLoader(context);
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -294,7 +293,6 @@ public class ImageLoader {
         }
         return false;
     }
-
 
 
     private Bitmap downloadBitmapFromUrl(String urlString) {

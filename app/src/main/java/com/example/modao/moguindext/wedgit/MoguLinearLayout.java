@@ -8,28 +8,28 @@ import android.widget.Scroller;
 /**
  * Created by modao on 16/7/18.
  */
-public class MogujieLinearLayout extends LinearLayout {
+public class MoguLinearLayout extends LinearLayout {
     private Scroller mScroller;
 
-    public MogujieLinearLayout(Context context) {
+    public MoguLinearLayout(Context context) {
         super(context);
         mScroller = new Scroller(context);
 
     }
 
-    public MogujieLinearLayout(Context context, AttributeSet attrs) {
+    public MoguLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mScroller = new Scroller(context);
 
     }
 
-    public MogujieLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MoguLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mScroller = new Scroller(context);
 
     }
 
-    public MogujieLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public MoguLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         mScroller = new Scroller(context);
 

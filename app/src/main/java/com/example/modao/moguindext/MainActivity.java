@@ -11,13 +11,12 @@ import android.support.design.widget.AppBarLayout;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.modao.moguindext.Utils.ImageLoader.MoguImageJsonLoader;
 import com.example.modao.moguindext.Utils.ImageLoader.MoguResponse;
 import com.example.modao.moguindext.Utils.MoguRefreshPage;
-import com.example.modao.moguindext.wedgit.MogujieLinearLayout;
+import com.example.modao.moguindext.wedgit.MoguLinearLayout;
 
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
@@ -28,6 +27,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -46,8 +46,6 @@ import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -61,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh", "dwhnudh"};
     public twitRecycleAdapter madapter;
     MySwipeRefreshLayout swipeRefreshLayout;
-    AppBarLayout appBarLayout;
-    ViewPager viewPager;
+
+    ViewPager mViewPager;
     private List<ImageView> list = new ArrayList<ImageView>();
     private List<ImageView> pointList = new ArrayList<ImageView>();
     int num = 0;
@@ -94,14 +92,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     Button mButtonAddPeople;
     GridLayout mGridLayout;
     float y = 0;
-    MogujieLinearLayout mLinearLayoutParent;
-    float x1 = 0;
-    float x2 = 0;
-    float y1 = 0;
-    float y2 = 0;
+    MoguLinearLayout mLinearLayoutParent;
     View mViewProcess;
     MoguRefreshPage mMoguRefresh;
     static boolean isdown = false;
+    GestureDetector mges;
+    Button mButtonFive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void initView() {
 
-
+        mButtonFive = (Button) findViewById(R.id.like_fivhun);
         mViewProcess = findViewById(R.id.reresh_process);
-        mLinearLayoutParent = (MogujieLinearLayout) findViewById(R.id.linearlayout_parent);
+        mLinearLayoutParent = (MoguLinearLayout) findViewById(R.id.linearlayout_parent);
         mGridLayout = (GridLayout) findViewById(R.id.gridlayout);
         mButtonAddPeople = (Button) findViewById(R.id.add_people);
         mSupView = findViewById(R.id.sup_view);
@@ -126,9 +122,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mButtonSug = (Button) findViewById(R.id.sug);
         mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.index_scrollview);
         mCoordnatorLayout = (CoordinatorLayout) findViewById(R.id.index_coodernator);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mRecyclerview = (RecyclerView) findViewById(R.id.recyclerView);
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         but_focus = (Button) findViewById(R.id.focus);
         but_500like = (Button) findViewById(R.id.like_fivhun);
         but_200like = (Button) findViewById(R.id.like_twohun);
@@ -172,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         madapter = new twitRecycleAdapter(this, s);
         mRecyclerview.setAdapter(madapter);
 //        mRecyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        viewPager.setOnTouchListener(new View.OnTouchListener() {
+        mViewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -206,13 +201,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 VelocityTracker velocityTracker = VelocityTracker.obtain();
                 velocityTracker.addMovement(motionEvent);
                 velocityTracker.computeCurrentVelocity(10);
-                int yVelocity = (int) velocityTracker.getYVelocity();
-
+                float yVelocity = velocityTracker.getYVelocity();
+                mButtonFive.setText(yVelocity + "");
                 if (yVelocity > 0 && (processPosition[1] > -27) && (position[1] > 1590)) {
                     if (yVelocity > 80) {
                         yVelocity = 80;
                     }
-                    mLinearLayoutParent.scrollBy(0, -yVelocity);
+                    mLinearLayoutParent.scrollBy(0, -(int) yVelocity);
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                 } else if (!(yVelocity > 0) && (processPosition[1] > -25)) {
@@ -242,7 +237,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     }
 
                 }
+                if (mMoguRefresh != null && mAppbarLayout != null && mMoguRefresh.isRefreshing() == true) {
+                    mRecyclerview.scrollToPosition(0);
+                    mAppbarLayout.setExpanded(true);
 
+                }
                 return false;
             }
         });
@@ -264,12 +263,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 } else {
 //                    mLinearLayoutSearch.setVisibility(View.VISIBLE);
                 }
+                if (mMoguRefresh != null && mAppbarLayout != null && mMoguRefresh.isRefreshing() == true) {
+                    mRecyclerview.scrollToPosition(0);
+                }
             }
         });
+
+
         mRecyclerview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.e("-----------------re", "touch");
+
                 int[] position = new int[2];
                 int[] processPosition = new int[2];
                 mViewProcess.getLocationOnScreen(processPosition);
@@ -278,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 ViewConfiguration.get(getApplicationContext()).getScaledMinimumFlingVelocity();
                 velocityTracker.addMovement(motionEvent);
                 velocityTracker.computeCurrentVelocity(10);
-                int yVelocity = (int) velocityTracker.getYVelocity();
+                float yVelocity = velocityTracker.getYVelocity();
                 mButtonSug.setText(yVelocity + "");
                 if (yVelocity > 0 && (position[1] > 1500)) {
                     LinearLayoutManager lm = (LinearLayoutManager) mRecyclerview.getLayoutManager();
@@ -287,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         if (yVelocity > 80) {
                             yVelocity = 80;
                         }
-                        mLinearLayoutParent.scrollBy(0, -yVelocity);
+                        mLinearLayoutParent.scrollBy(0, -(int) yVelocity);
 //                    mCoordnatorLayout.stopNestedScroll();
 //                    mLinearLayoutSearch.setVisibility(View.INVISIBLE);
                     }
@@ -296,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     Log.e("------------------item", "down");
 
                 }
+
                 if (MotionEvent.ACTION_UP == motionEvent.getAction()) {
 //                    mLinearLayoutParent.smoothscrollby(0, 0);
                     if (mLinearLayoutSearch.getVisibility() == View.INVISIBLE) {
@@ -315,11 +320,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         if (lm.findViewByPosition(lm.findFirstVisibleItemPosition()).getTop() == 0
                                 && lm.findFirstVisibleItemPosition() == 0) {
 
-                            appBarLayout.setExpanded(true);
+
                         }
-                    }
-                    if (position[1] < 700 && position[1] > 450) {
-                        appBarLayout.setExpanded(true);
                     }
 
 //                    appBarLayout.setExpanded(isdown);
@@ -335,11 +337,34 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     }
 
                 }
+                if (mMoguRefresh != null && mAppbarLayout != null && mMoguRefresh.isRefreshing() == true) {
+                    mRecyclerview.scrollToPosition(0);
+                    mAppbarLayout.setExpanded(true);
 
-
+                }
                 return false;
             }
         });
+
+        mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int[] position = new int[2];
+
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mHorizontalScrollView.getLocationOnScreen(position);
+                if (position[1] > 400) {
+                    mRecyclerview.scrollToPosition(0);
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
 
     }
 
@@ -411,9 +436,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         list.add(imageView4);
         list.add(imageView5);
         list.add(imageView6);
-        viewPager.setOnPageChangeListener(MainActivity.this);
+        mViewPager.setOnPageChangeListener(MainActivity.this);
         adapter = new GuidePageAdapter();
-        viewPager.setAdapter(adapter);
+        mViewPager.setAdapter(adapter);
         pointList.clear();
         for (int i = 0; i < list.size(); i++) {
             LinearLayout.LayoutParams margin = new LinearLayout.LayoutParams(21, 21);
@@ -439,8 +464,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             myHandler = new Handler() {
 
                 public void handleMessage(Message msg) {
-                    if (viewPager != null && list != null) {
-                        viewPager.setCurrentItem(num);
+                    if (mViewPager != null && list != null) {
+                        mViewPager.setCurrentItem(num);
                         if (num == list.size() - 1) {
                             num = 0;
                         } else {
@@ -461,8 +486,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
+
 
     @Override
     public void onPageSelected(int arg0) {
@@ -520,14 +545,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
                 break;
             case R.id.sug:
-                mAppbarLayout.setEnabled(false);
-//                appBarLayout.scrollBy(0, -90);
-//                android.support.design.widget.CoordinatorLayout.Behavior behavior =
-//                        ((android.support.design.widget.CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams())
-//                                .getBehavior();
-//                behavior.onNestedPreScroll(mCoordnatorLayout, mAppbarLayout, mAppbarLayout, 0,-200, new int[]{0, 0});
-//                mRecyclerview.scrollBy(0, -90);
-//                mCoordnatorLayout.offsetTopAndBottom(40);
                 break;
         }
 
@@ -595,7 +612,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 parent.removeView(view);
             }
 
-            viewPager.addView(view);
+            mViewPager.addView(view);
             // add listeners here if necessary
             return view;
         }

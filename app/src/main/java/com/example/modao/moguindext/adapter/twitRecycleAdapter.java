@@ -1,10 +1,15 @@
 package com.example.modao.moguindext.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +22,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.engine.Resource;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.example.modao.moguindext.MainActivity;
 import com.example.modao.moguindext.R;
 import com.example.modao.moguindext.Utils.MoguUtils;
@@ -41,6 +48,7 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     PopupWindow mWindow;
     public Context context;
 
+    public ViewPager mmViewpager;
 
     public twitRecycleAdapter(Context context, String[] datas) {
         str = datas;
@@ -70,15 +78,19 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView text;
         public TextView text_title;
         public View view;
-        public ViewPager viewPager;
+        public ViewPager mViewPager;
         public View mPopView;
         RelativeLayout mReal;
         LinearLayout mItemParentLinearLayout;
+        ImageView img1;
+        int bitmapHeight1 = 0;
+        int bitmapHeight2 = 0;
 
         public MyViewHolder1(View itemView) {
             super(itemView);
             mView = itemView;
             view = itemView;
+
             mItemParentLinearLayout = (LinearLayout) mView.findViewById(R.id.item_parent_linearlayout);
             mItemParentLinearLayout.setBackgroundResource(R.drawable.item_radius_background);
             mItemParentLinearLayout.getLayoutParams();
@@ -86,17 +98,29 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mPopView = itemView.findViewById(R.id.popwinbut);
             mReal = (RelativeLayout) mView.findViewById(R.id.item_top_rel);
             text_title = (TextView) itemView.findViewById(R.id.user_time_text);
-            viewPager = (ViewPager) itemView.findViewById(R.id.item_viewpager);
+            mViewPager = (ViewPager) itemView.findViewById(R.id.item_viewpager);
             rela_list = new ArrayList<>();
             RelativeLayout rel1 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel2 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel3 = new RelativeLayout(itemView.getContext());
-            ImageView img1 = new ImageView(itemView.getContext());
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+                    , ViewGroup.LayoutParams.WRAP_CONTENT);
+            img1 = new ImageView(itemView.getContext());
             ImageView img2 = new ImageView(itemView.getContext());
             ImageView img3 = new ImageView(itemView.getContext());
+            img1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img1.setLayoutParams(layoutParams);
+            img2.setLayoutParams(layoutParams);
+            img3.setLayoutParams(layoutParams);
             img1.setBackgroundResource(R.drawable.avator);
-            img2.setBackgroundResource(R.drawable.avator);
+            img2.setBackgroundResource(R.drawable.viewpager);
             img3.setBackgroundResource(R.drawable.avator);
+            Bitmap bitmap1 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.avator);
+            Bitmap bitmap2 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.avator);
+            bitmapHeight1 = bitmap1.getHeight();
+            bitmapHeight2 = bitmap2.getHeight();
             rel1.addView(img1);
             rel2.addView(img2);
             rel3.addView(img3);
@@ -118,7 +142,9 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rela_list.add(rel2);
             rela_list.add(rel3);
             itemViewpagerAdapter adapter = new itemViewpagerAdapter(rela_list);
-            viewPager.setAdapter(adapter);
+            mViewPager.setAdapter(adapter);
+            mViewPager.setPageTransformer(false, new CusPageTransformer());
+
 //            text.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
@@ -140,6 +166,36 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                                         }
             );
+
+        }
+
+        public class CusPageTransformer implements ViewPager.PageTransformer {
+
+            @Override
+            public void transformPage(View page, float position) {
+//            page.setAlpha((float) (1 - position));
+//                page.setScaleY(1 + Math.abs(position));
+                LinearLayout.LayoutParams ls = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bitmapHeight1);
+
+                if (position >= 0 && position < 2) {
+                    switch (mViewPager.getCurrentItem()) {
+                        case 2:
+
+                        case 0:
+                            ls.height = (int) ((Math.abs(position)) * bitmapHeight2);
+                            break;
+                        case 1:
+                            ls.height = (int) ((Math.abs(position)) * bitmapHeight1);
+                            break;
+
+
+                    }
+
+                    mViewPager.setLayoutParams(ls);
+                    Log.e("---------------position", position + "");
+//            page.setLayoutParams(layoutParams);
+                }
+            }
         }
 
     }
@@ -193,5 +249,6 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
     }
+
 
 }

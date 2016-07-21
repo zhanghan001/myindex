@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.modao.moguindext.wedgit.MogujieLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.modao.moguindext.wedgit.MoguLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearlayout_parent"
@@ -95,7 +95,7 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_live_circle_img"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -156,7 +156,7 @@
                             android:textSize="11sp" />
 
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_hot_people_circle_img"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -175,7 +175,7 @@
                         android:layout_marginTop="1dip"
                         android:background="#ffffff">
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_fashion_circle_img"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -237,7 +237,7 @@
                             android:textColor="@color/colorb"
                             android:textSize="11sp" />
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_amuse_avator"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -255,7 +255,7 @@
                         android:layout_marginTop="1dip"
                         android:background="#ffffff">
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_makeup_img"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -316,7 +316,7 @@
                             android:textColor="@color/colorb"
                             android:textSize="11sp" />
 
-                        <com.example.modao.moguindext.wedgit.MogujieCircleImageview
+                        <com.example.modao.moguindext.wedgit.MoguCircleImageview
                             android:id="@+id/index_find_img"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
@@ -510,4 +510,4 @@
 
 
     </android.support.design.widget.CoordinatorLayout>
-</com.example.modao.moguindext.wedgit.MogujieLinearLayout>
+</com.example.modao.moguindext.wedgit.MoguLinearLayout>

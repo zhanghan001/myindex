@@ -445,6 +445,5 @@ public class MoguImageJsonLoader {
     }
 
 
-
 }
 

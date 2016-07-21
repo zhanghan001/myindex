@@ -41,12 +41,12 @@ public class itemViewpagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(View arg0, int position) {
         position %= list.size();
         if (position < 0) {
             position = list.size() + position;
         }
-        container.addView( list.get(position));
+        ((ViewGroup)arg0).addView(list.get(position));
         return list.get(position);
     }
 

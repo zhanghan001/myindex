@@ -18,25 +18,25 @@ import com.example.modao.moguindext.R;
 /**
  * Created by modao on 16/7/14.
  */
-public class MogujieCircleImageview extends ImageView {
+public class MoguCircleImageview extends ImageView {
     public int mMogujie_circle_range = 0;
     public Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     public Bitmap mBitmap = null;
 
-    public MogujieCircleImageview(Context context) {
+    public MoguCircleImageview(Context context) {
         super(context);
         init();
     }
 
-    public MogujieCircleImageview(Context context, AttributeSet attrs) {
+    public MoguCircleImageview(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MogujieCircleImageview(Context context, AttributeSet attrs, int defStyle) {
+    public MoguCircleImageview(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MogujieCircleImageview);
-        mMogujie_circle_range = a.getDimensionPixelOffset(R.styleable.MogujieCircleImageview_Mogujie_circle_range, 50);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MoguCircleImageview);
+        mMogujie_circle_range = a.getDimensionPixelOffset(R.styleable.MoguCircleImageview_Mogujie_circle_range, 50);
         a.recycle();
         init();
     }

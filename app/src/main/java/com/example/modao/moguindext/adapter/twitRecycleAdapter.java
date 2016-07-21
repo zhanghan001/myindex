@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.modao.moguindext.MainActivity;
 import com.example.modao.moguindext.R;
-import com.example.modao.moguindext.Utils.MoguDip2px;
+import com.example.modao.moguindext.Utils.MoguUtils;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.Style;
 
@@ -101,13 +101,13 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rel2.addView(img2);
             rel3.addView(img3);
             CircleImageView point = new CircleImageView(itemView.getContext());
-            point.setBorderWidth(MoguDip2px.DipToPixels(itemView.getContext(), 1));
+            point.setBorderWidth(MoguUtils.DipToPixels(itemView.getContext(), 1));
             point.setBorderColor(Color.WHITE);
             point.setImageResource(R.drawable.amq);
-            int marginlaft = MoguDip2px.DipToPixels(itemView.getContext(), 230);
-            int margintop = MoguDip2px.DipToPixels(itemView.getContext(), 230);
-            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MoguDip2px.DipToPixels(itemView.getContext(), 11)
-                    , MoguDip2px.DipToPixels(itemView.getContext(), 11));
+            int marginlaft = MoguUtils.DipToPixels(itemView.getContext(), 230);
+            int margintop = MoguUtils.DipToPixels(itemView.getContext(), 230);
+            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MoguUtils.DipToPixels(itemView.getContext(), 11)
+                    , MoguUtils.DipToPixels(itemView.getContext(), 11));
 //            p.width =;
 //            p.height = 30;
             p.leftMargin = marginlaft;

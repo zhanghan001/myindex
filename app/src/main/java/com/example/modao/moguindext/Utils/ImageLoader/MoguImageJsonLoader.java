@@ -3,14 +3,18 @@ package com.example.modao.moguindext.Utils.ImageLoader;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.util.LruCache;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,12 +43,12 @@ import com.example.modao.moguindext.R;
 /**
  * Created by modao on 16/7/20.
  */
-public class ImageJsonLoader {
+public class MoguImageJsonLoader {
+    public static final int SUCCESS = 0;
+    private static final String TAG = "MoguImageJsonLoader";
 
-    private static final String TAG = "ImageJsonLoader";
-
-    public static final int MESSAGE_POST_RESULT = 1;
-
+    public static final int MESSAGE_POST_RESULT_img = 1;
+    public static final int MESSAGE_POST_RESULT_Json = 2;
     private static final int CPU_COUNT = Runtime.getRuntime()
             .availableProcessors();
     private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
@@ -56,12 +60,13 @@ public class ImageJsonLoader {
     private static final int IO_BUFFER_SIZE = 8 * 1024;
     private static final int DISK_CACHE_INDEX = 0;
     private boolean mIsDiskLruCacheCreated = false;
-
+    public String mJson;
+    private MoguResponse.Listener mListener;
     private static final ThreadFactory sThreadFactory = new ThreadFactory() {
         private final AtomicInteger mCount = new AtomicInteger(1);
 
         public Thread newThread(Runnable r) {
-            return new Thread(r, "ImageJsonLoader#" + mCount.getAndIncrement());
+            return new Thread(r, "MoguImageJsonLoader#" + mCount.getAndIncrement());
         }
     };
 
@@ -74,17 +79,20 @@ public class ImageJsonLoader {
         @Override
         public void handleMessage(Message msg) {
             LoaderResult result = (LoaderResult) msg.obj;
-            ImageView imageView = result.imageView;
-            imageView.setImageBitmap(result.bitmap);
-            String uri = (String) imageView.getTag(TAG_KEY_URI);
-            if (uri.equals(result.uri)) {
+            if (msg.what == MESSAGE_POST_RESULT_img) {
+                ImageView imageView = result.imageView;
                 imageView.setImageBitmap(result.bitmap);
-            } else {
-                Log.w(TAG, "set image bitmap,but url has changed, ignored!");
+                String uri = (String) imageView.getTag(TAG_KEY_URI);
+                if (uri.equals(result.uri)) {
+                    imageView.setImageBitmap(result.bitmap);
+                } else {
+                    Log.w(TAG, "set image bitmap,but url has changed, ignored!");
+                }
+            } else if (msg.what == MESSAGE_POST_RESULT_Json) {
+                String resJson = result.json;
+                mListener.onSuccess(resJson);
             }
         }
-
-        ;
     };
 
     private Context mContext;
@@ -92,7 +100,7 @@ public class ImageJsonLoader {
     private LruCache<String, Bitmap> mMemoryCache;
     private DiskLruCache mDiskLruCache;
 
-    private ImageJsonLoader(Context context) {
+    private MoguImageJsonLoader(Context context) {
         mContext = context.getApplicationContext();
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         int cacheSize = maxMemory / 8;
@@ -118,13 +126,13 @@ public class ImageJsonLoader {
     }
 
     /**
-     * build a new instance of ImageJsonLoader
+     * build a new instance of MoguImageJsonLoader
      *
      * @param context
-     * @return a new instance of ImageJsonLoader
+     * @return a new instance of MoguImageJsonLoader
      */
-    public static ImageJsonLoader build(Context context) {
-        return new ImageJsonLoader(context);
+    public static MoguImageJsonLoader build(Context context) {
+        return new MoguImageJsonLoader(context);
     }
 
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
@@ -164,7 +172,7 @@ public class ImageJsonLoader {
                 Bitmap bitmap = loadBitmap(uri, reqWidth, reqHeight);
                 if (bitmap != null) {
                     LoaderResult result = new LoaderResult(imageView, uri, bitmap);
-                    mMainHandler.obtainMessage(MESSAGE_POST_RESULT, result).sendToTarget();
+                    mMainHandler.obtainMessage(MESSAGE_POST_RESULT_img, result).sendToTarget();
                 }
             }
         };
@@ -367,12 +375,76 @@ public class ImageJsonLoader {
         public ImageView imageView;
         public String uri;
         public Bitmap bitmap;
+        public String json;
 
         public LoaderResult(ImageView imageView, String uri, Bitmap bitmap) {
             this.imageView = imageView;
             this.uri = uri;
             this.bitmap = bitmap;
+
+        }
+
+        public LoaderResult(String uri, String json) {
+            this.uri = uri;
+            this.json = json;
         }
     }
+
+    public void loadJson(final String urls, final MoguResponse.Listener listener) {
+        mListener = listener;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                String mJson = jsonLoader(urls);
+                if (mJson != null) {
+                    LoaderResult result = new LoaderResult(urls, mJson);
+
+                    mMainHandler.obtainMessage(MESSAGE_POST_RESULT_Json, result).sendToTarget();
+
+                } else {
+                    mListener.onFail();
+                }
+            }
+        };
+        THREAD_POOL_EXECUTOR.execute(runnable);
+//        THREAD_POOL_EXECUTOR.execute(runnable);
+//        new Handler(Looper.getMainLooper()).post(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+    }
+
+    public String jsonLoader(String urls) {
+        InputStream in;
+        InputStreamReader inr;
+
+        BufferedReader br;
+        String str = "";
+        try {
+            URL url = new URL(urls);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true); //允许输入流，即允许下载
+            conn.setDoOutput(true); //允许输出流，即允许上传
+            conn.setUseCaches(true); //不使用缓冲
+            conn.setRequestMethod("GET"); //使用get请求
+            in = conn.getInputStream();
+            inr = new InputStreamReader(in);
+            br = new BufferedReader(inr);
+            String sb;
+            while ((sb = br.readLine()) != null) {
+                str = str + sb;
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e("---------------str", str);
+        return str;
+    }
+
+
+
 }
 

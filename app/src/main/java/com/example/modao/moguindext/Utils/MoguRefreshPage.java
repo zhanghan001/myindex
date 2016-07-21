@@ -43,7 +43,7 @@ public class MoguRefreshPage {
             animation.setInterpolator(new DecelerateInterpolator());
             ((MainActivity) context).findViewById(R.id.reresh_process).startAnimation(animation);
 
-//            layoutParams.setMargins(0, MoguDip2px.DipToPixels(context, 18), 0, 0);//4个参数按顺序分别是左上右下
+//            layoutParams.setMargins(0, MoguUtils.DipToPixels(context, 18), 0, 0);//4个参数按顺序分别是左上右下
 //            ((MainActivity) context).findViewById(R.id.linearlayout_parent).setLayoutParams(layoutParams);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -52,7 +52,7 @@ public class MoguRefreshPage {
                     if (context != null) {
                         animation.cancel();
 
-//                        layoutParams.setMargins(0, -MoguDip2px.DipToPixels(context, 32), 0, 0);//4个参数按顺序分别是左上右下
+//                        layoutParams.setMargins(0, -MoguUtils.DipToPixels(context, 32), 0, 0);//4个参数按顺序分别是左上右下
                         ((MogujieLinearLayout) ((MainActivity) context).findViewById(R.id.linearlayout_parent))
                                 .smoothscrollby(0, 0);
 //                        ((MainActivity) context).findViewById(R.id.linearlayout_parent).setLayoutParams(layoutParams);

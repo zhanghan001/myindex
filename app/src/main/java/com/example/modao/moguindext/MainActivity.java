@@ -6,16 +6,21 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.IntegerRes;
 import android.support.design.widget.AppBarLayout;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.modao.moguindext.Utils.ImageLoader.MoguImageJsonLoader;
+import com.example.modao.moguindext.Utils.ImageLoader.MoguResponse;
 import com.example.modao.moguindext.Utils.MoguRefreshPage;
-import com.example.modao.moguindext.Utils.Rotate3dAnimation;
 import com.example.modao.moguindext.wedgit.MogujieLinearLayout;
 
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +45,8 @@ import com.example.modao.moguindext.wedgit.MySwipeRefreshLayout;
 
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -334,30 +340,70 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 return false;
             }
         });
+
     }
 
     private void initData() {
+        MoguImageJsonLoader imageJsonLoader = MoguImageJsonLoader.build(MainActivity.this);
         list.clear();
         ImageView imageView0 = new ImageView(MainActivity.this);
+        imageJsonLoader.
+                loadJson("http://apis.baidu.com/heweather/weather/free", new MoguResponse.Listener() {
+                    @Override
+                    public void onSuccess(String json) {
+                        mButtonSug.setText(json);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        mButtonSug.setText("失败");
+                    }
+                });
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest("http://apis.baidu.com/heweather/weather/free", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                mButtonSug.setText(response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        requestQueue.add(request);
         Glide.with(this).load("http://i12.tietuku.cn/b6db401cce66841e.jpg").centerCrop().into(imageView0);
         ImageView imageView1 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/74d28c89f2857852.jpg").centerCrop().
-                into(imageView1);
+        imageView1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i12.tietuku.cn/74d28c89f2857852.jpg", imageView1);
+//        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/74d28c89f2857852.jpg").centerCrop().
+//                into(imageView1);
         ImageView imageView2 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i2.buimg.com/029168290e434623.jpg").centerCrop().
-                into(imageView2);
+        imageView2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i2.buimg.com/029168290e434623.jpg", imageView2);
+//        Glide.with(MainActivity.this).load("http://i2.buimg.com/029168290e434623.jpg").centerCrop().
+//                into(imageView2);
         ImageView imageView3 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                centerCrop().into(imageView3);
+        imageView2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg", imageView3);
+//        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+//                centerCrop().into(imageView3);
         ImageView imageView4 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                centerCrop().into(imageView4);
+        imageView4.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i12.tietuku.cn/74d28c89f2857852.jpg", imageView4);
+//        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+//                centerCrop().into(imageView4);
         ImageView imageView5 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                centerCrop().into(imageView5);
+        imageView5.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i12.tietuku.cn/74d28c89f2857852.jpg", imageView5);
+//        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+//                centerCrop().into(imageView5);
         ImageView imageView6 = new ImageView(this);
-        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
-                centerCrop().into(imageView6);
+        imageView6.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageJsonLoader.bindBitmap("http://i12.tietuku.cn/74d28c89f2857852.jpg", imageView6, 200, 400);
+//        Glide.with(MainActivity.this).load("http://i12.tietuku.cn/0ceed8e2f8f0c87a.jpg").
+//                centerCrop().into(imageView6);
         list.add(imageView0);
         list.add(imageView1);
         list.add(imageView2);
@@ -470,10 +516,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 openactivity();
                 break;
             case R.id.focus:
-//                mCoordnatorLayout.smo
-                y = 0;
+                mAppbarLayout.setEnabled(true);
+
                 break;
             case R.id.sug:
+                mAppbarLayout.setEnabled(false);
 //                appBarLayout.scrollBy(0, -90);
 //                android.support.design.widget.CoordinatorLayout.Behavior behavior =
 //                        ((android.support.design.widget.CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams())

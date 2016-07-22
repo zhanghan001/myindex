@@ -12,10 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -47,7 +49,7 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public View mView;
     PopupWindow mWindow;
     public Context context;
-
+    public int currentPage = 0;
     public ViewPager mmViewpager;
 
     public twitRecycleAdapter(Context context, String[] datas) {
@@ -82,15 +84,17 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public View mPopView;
         RelativeLayout mReal;
         LinearLayout mItemParentLinearLayout;
-        ImageView img1;
+        List<ImageView> mImageViews = new ArrayList<ImageView>();
         int bitmapHeight1 = 0;
         int bitmapHeight2 = 0;
+        int[] heights = new int[50];
+
 
         public MyViewHolder1(View itemView) {
             super(itemView);
             mView = itemView;
             view = itemView;
-
+            int mvpagerWidth = 0;
             mItemParentLinearLayout = (LinearLayout) mView.findViewById(R.id.item_parent_linearlayout);
             mItemParentLinearLayout.setBackgroundResource(R.drawable.item_radius_background);
             mItemParentLinearLayout.getLayoutParams();
@@ -103,24 +107,33 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             RelativeLayout rel1 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel2 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel3 = new RelativeLayout(itemView.getContext());
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
-                    , ViewGroup.LayoutParams.WRAP_CONTENT);
-            img1 = new ImageView(itemView.getContext());
+            ImageView img1 = new ImageView(itemView.getContext());
             ImageView img2 = new ImageView(itemView.getContext());
             ImageView img3 = new ImageView(itemView.getContext());
+            mImageViews.add(img1);
+            mImageViews.add(img2);
+            mImageViews.add(img3);
             img1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img2.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img3.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            img1.setLayoutParams(layoutParams);
-            img2.setLayoutParams(layoutParams);
-            img3.setLayoutParams(layoutParams);
             img1.setBackgroundResource(R.drawable.avator);
             img2.setBackgroundResource(R.drawable.viewpager);
             img3.setBackgroundResource(R.drawable.avator);
             Bitmap bitmap1 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.avator);
-            Bitmap bitmap2 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.avator);
+            Bitmap bitmap2 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.viewpager);
             bitmapHeight1 = bitmap1.getHeight();
             bitmapHeight2 = bitmap2.getHeight();
+            mItemParentLinearLayout.measure(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            mvpagerWidth = mItemParentLinearLayout.getMeasuredWidth();
+            heights[0] = bitmapHeight1 * mvpagerWidth / bitmap1.getWidth();
+            heights[1] = bitmapHeight2 * mvpagerWidth / bitmap2.getWidth();
+            heights[2] = bitmapHeight1 * mvpagerWidth / bitmap1.getWidth();
+            img1.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]));
+            img2.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[1]));
+            img3.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[2]));
+            LinearLayout.LayoutParams vpagerParems
+                    = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]);
+            mViewPager.setLayoutParams(vpagerParems);
             rel1.addView(img1);
             rel2.addView(img2);
             rel3.addView(img3);
@@ -143,14 +156,17 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rela_list.add(rel3);
             itemViewpagerAdapter adapter = new itemViewpagerAdapter(rela_list);
             mViewPager.setAdapter(adapter);
-            mViewPager.setPageTransformer(false, new CusPageTransformer());
+            mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+            mViewPager.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        Log.e("-------------viewpager", "touch");
+                    }
 
-//            text.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    text.setTextColor(v.getResources().getColor(R.color.colorAccent));
-//                }
-//            });
+                    return false;
+                }
+            });
             mPopView.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -169,35 +185,40 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }
 
-        public class CusPageTransformer implements ViewPager.PageTransformer {
+        public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+            public void transformPage(View view, float position) {
+//                int pageWidth = view.getWidth();
+//                int pageHeight = view.getHeight();
+                Log.e("------------height", position + "");
 
-            @Override
-            public void transformPage(View page, float position) {
-//            page.setAlpha((float) (1 - position));
-//                page.setScaleY(1 + Math.abs(position));
-                LinearLayout.LayoutParams ls = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, bitmapHeight1);
+                if (position < -1) { // [-Infinity,-1)
 
-                if (position >= 0 && position < 2) {
-                    switch (mViewPager.getCurrentItem()) {
-                        case 2:
+                } else if (position <= 1) { // [-1,1]
 
-                        case 0:
-                            ls.height = (int) ((Math.abs(position)) * bitmapHeight2);
-                            break;
-                        case 1:
-                            ls.height = (int) ((Math.abs(position)) * bitmapHeight1);
-                            break;
+                    if (position < 0) {
+                        int currentPos = mViewPager.indexOfChild(view);
+                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+                        if (mViewPager.getCurrentItem() < 3 && heights[mViewPager.getCurrentItem()] != 0) {
+                            ls.height = (int) (((RelativeLayout) view).getChildAt(0).getHeight() - (Math.abs(position))
+                                    * (((RelativeLayout) view).getChildAt(0).getHeight()
+                                    - heights[currentPos + 1]));
+                            mViewPager.setLayoutParams(ls);
+                        }
 
+
+                    } else if (0 == position) {
+                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+                        ls.height = (int) (mImageViews.get(mViewPager.getCurrentItem()).getHeight());
+                        mViewPager.setLayoutParams(ls);
 
                     }
 
-                    mViewPager.setLayoutParams(ls);
-                    Log.e("---------------position", position + "");
-//            page.setLayoutParams(layoutParams);
+                } else { // (1,+Infinity]
+                    // This page is way off-screen to the right.
+
                 }
             }
         }
-
     }
 
 

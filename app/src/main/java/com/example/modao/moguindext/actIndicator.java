@@ -16,5 +16,6 @@ public class actIndicator  extends AppCompatActivity{
         String s=getIntent().getExtras().getString("msg");
         TextView textView = (TextView) findViewById(R.id.textmsg);
         textView.setText(s);
+
     }
 }

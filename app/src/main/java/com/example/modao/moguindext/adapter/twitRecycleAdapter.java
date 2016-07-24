@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
@@ -140,10 +141,10 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             heights[1] = bitmapHeight2 * mvpagerWidth / bitmap2.getWidth();
             heights[2] = bitmapHeight3 * mvpagerWidth / bitmap3.getWidth();
             heights[3] = bitmapHeight4 * mvpagerWidth / bitmap4.getWidth();
-            img1.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]));
-            img2.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[1]));
-            img3.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[2]));
-            img4.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[3]));
+            img1.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            img2.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            img3.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            img4.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             LinearLayout.LayoutParams vpagerParems
                     = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]);
             mViewPager.setLayoutParams(vpagerParems);
@@ -181,37 +182,53 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     return false;
                 }
             });
-            mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                                                   @Override
-                                                   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                                                       if (mViewPager.getChildAt(1) != null) {
+            ViewPager.OnPageChangeListener listener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    if (mViewPager.getChildAt(1) != null) {
 //                                                           ((RelativeLayout) mViewPager.getChildAt(1)).getChildAt(0).getHeight();
-                                                           LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
-                                                           ls.height = (int) (heights[position] - (Math.abs(positionOffset) * (heights[position]
-                                                                   - heights[position + 1])));
-                                                           mViewPager.setLayoutParams(ls);
-                                                           float sc = positionOffset * ((float) heights[position + 1] / (float) heights[position] - 1) + 1;
-                                                           mImageViews.get(position)
-                                                                   .setScaleY(sc);
-                                                          mImageViews.get(position)
-                                                                   .setScaleX(sc);
-                                                           Log.e("-------------viewpager", position + "--------" + sc);
+                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+                        ls.height = (int) (heights[position] - (Math.abs(positionOffset) * (heights[position]
+                                - heights[position + 1])));
+                        mViewPager.setLayoutParams(ls);
+                        float sc = positionOffset * ((float) heights[position + 1] / (float) heights[position] - 1) + 1;
+
+                        if (position<mImageViews.size()-1) {
+                            if (heights[position] < heights[position + 1]) {
+                                float scale = ((float)ls.height) / heights[position];
+                                mImageViews.get(position).setScaleX(scale);
+                                mImageViews.get(position).setScaleY(1);
+                                scale = heights[position+1]/(float)ls.height;
+                                mImageViews.get(position+1).setScaleX(1);
+                                mImageViews.get(position+1).setScaleY(scale);
+//                                mImageViews.get(position + 1).getDrawable().setBounds(new Rect(0,top,ls.width,bottom));
+                            } else {
+                                float scale = ((float) ls.height )/ heights[position + 1];
+                                mImageViews.get(position + 1).setScaleX(scale);
+                                mImageViews.get(position + 1).setScaleY(1);
+                                scale = heights[position]/(float)ls.height;
+                                mImageViews.get(position).setScaleX(1);
+                                mImageViews.get(position).setScaleY(scale);
+
+//                                mImageViews.get(position).getDrawable().setBounds(new Rect(0,top,ls.width,bottom));
+                            }
+                        }
+                        Log.e("-------------viewpager", position + "--------" + sc);
 //
-                                                       }
-                                                   }
+                    }
+                }
 
-                                                   @Override
-                                                   public void onPageSelected(int position) {
+                @Override
+                public void onPageSelected(int position) {
 
-                                                   }
+                }
 
-                                                   @Override
-                                                   public void onPageScrollStateChanged(int state) {
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-                                                   }
-                                               }
-
-            );
+                }
+            };
+            mViewPager.setOnPageChangeListener(listener);
             mPopView.setOnClickListener(new View.OnClickListener()
 
                                         {

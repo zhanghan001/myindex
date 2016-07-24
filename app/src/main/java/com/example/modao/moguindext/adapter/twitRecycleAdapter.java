@@ -87,6 +87,8 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         List<ImageView> mImageViews = new ArrayList<ImageView>();
         int bitmapHeight1 = 0;
         int bitmapHeight2 = 0;
+        int bitmapHeight3 = 0;
+
         int[] heights = new int[50];
 
 
@@ -107,36 +109,48 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             RelativeLayout rel1 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel2 = new RelativeLayout(itemView.getContext());
             RelativeLayout rel3 = new RelativeLayout(itemView.getContext());
+            RelativeLayout rel4 = new RelativeLayout(itemView.getContext());
             ImageView img1 = new ImageView(itemView.getContext());
             ImageView img2 = new ImageView(itemView.getContext());
             ImageView img3 = new ImageView(itemView.getContext());
+            ImageView img4 = new ImageView(itemView.getContext());
             mImageViews.add(img1);
             mImageViews.add(img2);
             mImageViews.add(img3);
+            mImageViews.add(img4);
             img1.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img2.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img4.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img1.setBackgroundResource(R.drawable.avator);
             img2.setBackgroundResource(R.drawable.viewpager);
-            img3.setBackgroundResource(R.drawable.avator);
+            img3.setBackgroundResource(R.drawable.threepage);
+            img4.setBackgroundResource(R.drawable.page4);
             Bitmap bitmap1 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.avator);
             Bitmap bitmap2 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.viewpager);
+            Bitmap bitmap3 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.threepage);
+            Bitmap bitmap4 = BitmapFactory.decodeResource(mView.getContext().getResources(), R.drawable.page4);
             bitmapHeight1 = bitmap1.getHeight();
             bitmapHeight2 = bitmap2.getHeight();
+            bitmapHeight3 = bitmap3.getHeight();
+            int bitmapHeight4 = bitmap4.getHeight();
             mItemParentLinearLayout.measure(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             mvpagerWidth = mItemParentLinearLayout.getMeasuredWidth();
             heights[0] = bitmapHeight1 * mvpagerWidth / bitmap1.getWidth();
             heights[1] = bitmapHeight2 * mvpagerWidth / bitmap2.getWidth();
-            heights[2] = bitmapHeight1 * mvpagerWidth / bitmap1.getWidth();
+            heights[2] = bitmapHeight3 * mvpagerWidth / bitmap3.getWidth();
+            heights[3] = bitmapHeight4 * mvpagerWidth / bitmap4.getWidth();
             img1.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]));
             img2.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[1]));
             img3.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[2]));
+            img4.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[3]));
             LinearLayout.LayoutParams vpagerParems
                     = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heights[0]);
             mViewPager.setLayoutParams(vpagerParems);
             rel1.addView(img1);
             rel2.addView(img2);
             rel3.addView(img3);
+            rel4.addView(img4);
             CircleImageView point = new CircleImageView(itemView.getContext());
             point.setBorderWidth(MoguUtils.DipToPixels(itemView.getContext(), 1));
             point.setBorderColor(Color.WHITE);
@@ -154,20 +168,53 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rel1.addView(point);
             rela_list.add(rel2);
             rela_list.add(rel3);
+            rela_list.add(rel4);
             itemViewpagerAdapter adapter = new itemViewpagerAdapter(rela_list);
             mViewPager.setAdapter(adapter);
-            mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+//            mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
             mViewPager.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_UP) {
-                        Log.e("-------------viewpager", "touch");
                     }
 
                     return false;
                 }
             });
-            mPopView.setOnClickListener(new View.OnClickListener() {
+            mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                                   @Override
+                                                   public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                                       if (mViewPager.getChildAt(1) != null) {
+//                                                           ((RelativeLayout) mViewPager.getChildAt(1)).getChildAt(0).getHeight();
+                                                           LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+                                                           ls.height = (int) (heights[position] - (Math.abs(positionOffset) * (heights[position]
+                                                                   - heights[position + 1])));
+                                                           mViewPager.setLayoutParams(ls);
+                                                           float sc = positionOffset * ((float) heights[position + 1] / (float) heights[position] - 1) + 1;
+                                                           mImageViews.get(position)
+                                                                   .setScaleY(sc);
+                                                          mImageViews.get(position)
+                                                                   .setScaleX(sc);
+                                                           Log.e("-------------viewpager", position + "--------" + sc);
+//
+                                                       }
+                                                   }
+
+                                                   @Override
+                                                   public void onPageSelected(int position) {
+
+                                                   }
+
+                                                   @Override
+                                                   public void onPageScrollStateChanged(int state) {
+
+                                                   }
+                                               }
+
+            );
+            mPopView.setOnClickListener(new View.OnClickListener()
+
+                                        {
                                             @Override
                                             public void onClick(View view) {
                                                 // 在底部显示
@@ -181,6 +228,7 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
                                         }
+
             );
 
         }
@@ -189,34 +237,31 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             public void transformPage(View view, float position) {
 //                int pageWidth = view.getWidth();
 //                int pageHeight = view.getHeight();
-                Log.e("------------height", position + "");
-
-                if (position < -1) { // [-Infinity,-1)
-
-                } else if (position <= 1) { // [-1,1]
+//                Log.e("------------height", position + "");
+                if (position <= 1) { // [-1,1]
 
                     if (position < 0) {
                         int currentPos = mViewPager.indexOfChild(view);
-                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
-                        if (mViewPager.getCurrentItem() < 3 && heights[mViewPager.getCurrentItem()] != 0) {
-                            ls.height = (int) (((RelativeLayout) view).getChildAt(0).getHeight() - (Math.abs(position))
-                                    * (((RelativeLayout) view).getChildAt(0).getHeight()
-                                    - heights[currentPos + 1]));
-                            mViewPager.setLayoutParams(ls);
+                        if (currentPos != 2) {
+                            LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+                            if (mViewPager.getCurrentItem() < 3 && heights[mViewPager.getCurrentItem()] != 0) {
+                                ls.height = (int) (((RelativeLayout) view).getChildAt(0).getHeight() - (Math.abs(position))
+                                        * (((RelativeLayout) view).getChildAt(0).getHeight()
+                                        - heights[currentPos + 1]));
+                                mViewPager.setLayoutParams(ls);
+                            }
                         }
 
 
                     } else if (0 == position) {
-                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
-                        ls.height = (int) (mImageViews.get(mViewPager.getCurrentItem()).getHeight());
-                        mViewPager.setLayoutParams(ls);
+//                        LinearLayout.LayoutParams ls = (LinearLayout.LayoutParams) mViewPager.getLayoutParams();
+//                        ls.height = (int) (mImageViews.get(mViewPager.getCurrentItem()).getHeight());
+//                        mViewPager.setLayoutParams(ls);
 
                     }
 
-                } else { // (1,+Infinity]
-                    // This page is way off-screen to the right.
-
                 }
+                return;
             }
         }
     }

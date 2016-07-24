@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -151,6 +152,10 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             rel2.addView(img2);
             rel3.addView(img3);
             rel4.addView(img4);
+            ViewPager.LayoutParams lsp = new ViewPager.LayoutParams();
+            lsp.height = heights[1];
+            lsp.width = (mViewPager.getLayoutParams()).width;
+            rel2.setLayoutParams(lsp);
             CircleImageView point = new CircleImageView(itemView.getContext());
             point.setBorderWidth(MoguUtils.DipToPixels(itemView.getContext(), 1));
             point.setBorderColor(Color.WHITE);
@@ -159,8 +164,6 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             int margintop = MoguUtils.DipToPixels(itemView.getContext(), 230);
             RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(MoguUtils.DipToPixels(itemView.getContext(), 11)
                     , MoguUtils.DipToPixels(itemView.getContext(), 11));
-//            p.width =;
-//            p.height = 30;
             p.leftMargin = marginlaft;
             p.topMargin = margintop;
             point.setLayoutParams(p);
@@ -190,12 +193,23 @@ public class twitRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                                            ls.height = (int) (heights[position] - (Math.abs(positionOffset) * (heights[position]
                                                                    - heights[position + 1])));
                                                            mViewPager.setLayoutParams(ls);
-                                                           float sc = positionOffset * ((float) heights[position + 1] / (float) heights[position] - 1) + 1;
-                                                           mImageViews.get(position)
-                                                                   .setScaleY(sc);
-                                                          mImageViews.get(position)
-                                                                   .setScaleX(sc);
-                                                           Log.e("-------------viewpager", position + "--------" + sc);
+                                                           Log.e("-------------viewpager", position + "");
+                                                           if (heights[position + 1] > heights[position]) {
+                                                               float sc = positionOffset * ((float) heights[position + 1] / (float) heights[position] - 1) + 1;
+//                                                               mViewPager.getChildAt(1).setScaleY(sc);
+                                                               mImageViews.get(position).setScaleX(sc);
+//                                                               mViewPager.getChildAt(1).setScaleX(sc);
+                                                               mImageViews.get(position).setScaleY(sc);
+                                                               Log.e("-------------viewpager", position + "--------" + sc);
+                                                               return;
+                                                           } else if ((position + 1) < mImageViews.size()) {
+                                                               float sc = ((float) heights[position] / (float) heights[position + 1]
+                                                                       - positionOffset * ((float) heights[position] / (float) heights[position + 1] - 1));
+                                                               mImageViews.get(position + 1).setScaleY(sc);
+                                                               mImageViews.get(position + 1).setScaleX(sc);
+
+                                                               Log.e("----------viewpager" + positionOffset + "---", position + "else--------" + sc);
+                                                           }
 //
                                                        }
                                                    }
